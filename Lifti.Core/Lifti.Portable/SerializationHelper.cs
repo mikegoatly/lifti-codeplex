@@ -61,11 +61,7 @@ namespace Lifti
         internal static Func<BinaryReader, T> DetermineReaderMethod<T>()
         {
             var readerType = typeof(BinaryReader);
-#if !NETFX_CORE
-            var method = readerType.GetMethod("Read" + typeof(T).Name, Type.EmptyTypes);
-#else
             var method = readerType.GetTypeInfo().GetDeclaredMethods("Read" + typeof(T).Name).FirstOrDefault();
-#endif
 
             if (method != null)
             {
