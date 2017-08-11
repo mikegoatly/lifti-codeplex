@@ -11,7 +11,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
     /// <summary>
     /// The base test class for TransactionLog tests.
     /// </summary>
-    public abstract class TransactionLogTestBase : UnitTestBase
+    public abstract class TransactionLogTestBase
     {
         /// <summary>
         /// Creates a transaction log.

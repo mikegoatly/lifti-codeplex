@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
     using Lifti.Persistence;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for getting pages from the page manager.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class InvalidatingAPage : PageManagerTestBase
     {
         /// <summary>
         /// The last item index page should not be invalidated - it should remain in the page manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldLeaveTheLastItemIndexPageWhenInvalidated()
         {
             // Setup
@@ -48,7 +48,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// The last index node page should not be invalidated - it should remain in the page manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldLeaveTheLastIndexNodePageWhenInvalidated()
         {
             // Setup
@@ -76,7 +76,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// The page manager page list and page link references should be update when the first index node page is invalidated.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldUpdateRelevantReferencesWhenFirstIndexNodePageInvalidated()
         {
             // Setup
@@ -110,7 +110,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// The page manager should flush the updated page references to the underlying IO manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldFlushTheUpdatedLinkReferencesToTheIOManagerWhenInvalidatingFirstPage()
         {
             // Setup
@@ -140,7 +140,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// The page manager page list and page link references should be update when a middle index node page is invalidated.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldUpdateRelevantReferencesWhenMiddleIndexNodePageInvalidated()
         {
             // Setup
@@ -174,7 +174,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// The page manager should flush the updated page references to the underlying IO manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldFlushTheUpdatedLinkReferencesToTheIOManagerWhenInvalidatingMiddlePage()
         {
             // Setup
@@ -204,7 +204,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// The page manager page list and page link references should be update when the last index node page is invalidated.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldUpdateRelevantReferencesWhenLastIndexNodePageInvalidated()
         {
             // Setup
@@ -238,7 +238,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// The page manager should flush the updated page references to the underlying IO manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldFlushTheUpdatedLinkReferencesToTheIOManagerWhenInvalidatingLastPage()
         {
             // Setup

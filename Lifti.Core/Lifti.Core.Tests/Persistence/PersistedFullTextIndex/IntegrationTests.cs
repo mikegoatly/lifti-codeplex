@@ -11,122 +11,90 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
     using System.Threading;
     using System.Threading.Tasks;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
+    using System.Reflection;
+
+    using Should;
 
     /// <summary>
     /// Integration tests for the persisted full text index.
     /// </summary>
-    [TestClass, DeploymentItem("WikipediaPages.dat")]
+    [TestFixture]
     public class IntegrationTests
     {
-        /// <summary>
-        /// The path to the text full text index.
-        /// </summary>
-        private string path;
+        private MemoryStream stream;
+        private PersistedFullTextIndex<string> sut;
 
-        /// <summary>
-        /// Cleans up before and after each test.
-        /// </summary>
-        [TestCleanup]
-        [TestInitialize]
-        public void TestCleanup()
+        [SetUp]
+        public void SetUp()
         {
-            this.path = $"testindex{Guid.NewGuid()}.dat";
-
-            if (File.Exists(this.path))
-            {
-                File.Delete(this.path);
-            }
-
-            if (File.Exists(this.path + ".txlog"))
-            {
-                File.Delete(this.path + ".txlog");
-            }
+            this.stream = new MemoryStream();
+            this.sut = new PersistedFullTextIndex<string>(this.stream);
         }
 
         /// <summary>
         /// Tests that an index containing strings can be persisted and restored successfully.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PersistAndRestoreStringIndex()
         {
-            using (var index = new PersistedFullTextIndex<string>(this.path))
-            {
-                index.Index("Item 1", "The quick brown fox jumped over the lazy dog");
-            }
+            this.sut.Index("Item 1", "The quick brown fox jumped over the lazy dog");
 
-            using (var index = new PersistedFullTextIndex<string>(this.path))
+            this.stream.Position = 0L;
+            using (var index = new PersistedFullTextIndex<string>(this.stream))
             {
-                Assert.IsTrue((new[] { 0, 6 }).SequenceEqual(index.RootNode.Match('T').Match('H').Match('E').GetDirectItems().First().Positions));
-                Assert.AreEqual("Item 1", index.Search("quick").Single());
+                index.RootNode.Match('T').Match('H').Match('E').GetDirectItems().First().Positions.ShouldEqual(new[] { 0, 6 });
+                index.Search("quick").Single().ShouldEqual("Item 1");
             }
         }
 
         /// <summary>
         /// Tests that removing the last item from an index should leave it empty.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingLastItemFromIndexShouldLeaveFileStoreEmpty()
         {
-            using (var index = new PersistedFullTextIndex<string>(this.path))
-            {
-                index.Index("Item 1", "The quick brown fox jumped over the lazy dog");
-            }
+            this.sut.Index("Item 1", "The quick brown fox jumped over the lazy dog");
 
-            using (var index = new PersistedFullTextIndex<string>(this.path))
-            {
-                index.Remove("Item 1");
-            }
+            this.sut.Remove("Item 1");
 
-            using (var index = new PersistedFullTextIndex<string>(this.path))
-            {
-                Assert.AreEqual(0, index.Search("quick").Count());
-            }
+            this.sut.Search("quick").Count().ShouldEqual(0);
         }
 
         /// <summary>
         /// When removing an item that doesn't exist, no exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingItemThatDoesntExistShouldntThrowException()
         {
-            using (var index = new PersistedFullTextIndex<string>(this.path))
-            {
-                index.Remove("Item 1");
-            }
+            this.sut.Remove("Item 1");
         }
 
         /// <summary>
         /// Stress loads the index with lots of data, and attempts to reload it.
         /// </summary>
-        [TestMethod]
-        public void StressLoadIndex()
+        [Test]
+        public async Task StressLoadIndex()
         {
-            using (var index = new PersistedFullTextIndex<string>(this.path))
-            {
-                index.WordSplitter = new XmlWordSplitter(new StemmingWordSplitter());
+            this.sut.WordSplitter = new XmlWordSplitter(new StemmingWordSplitter());
+            this.sut.SearchWordSplitter = new WordSplitter();
 
-                foreach (var page in this.EnumeratePages())
-                {
-                    index.Index(page.Key, page.Value);
-                }
+            foreach (var page in this.EnumeratePages())
+            {
+                this.sut.Index(page.Key, page.Value);
             }
 
-            // Read different parts of the index from 3 threads
-            using (var index = new PersistedFullTextIndex<string>(this.path))
-            {
-                Assert.IsTrue(index.Count == 200);
+            this.sut.Count.ShouldEqual(200);
 
-                var barrier = new Barrier(5);
+            // Read different parts of the index from 5 threads
+            var barrier = new Barrier(5);
 
-                Parallel.Invoke(
-                    new ParallelOptions { MaxDegreeOfParallelism = 5 }, 
-                    () => { barrier.SignalAndWait(); Assert.AreEqual(200, index.Search("A").Count()); },
-                    () => { barrier.SignalAndWait(); Assert.AreEqual(200, index.Search("B").Count()); },
-                    () => { barrier.SignalAndWait(); Assert.AreEqual(200, index.Search("C").Count()); },
-                    () => { barrier.SignalAndWait(); Assert.AreEqual(200, index.Search("D").Count()); },
-                    () => { barrier.SignalAndWait(); Assert.AreEqual(61, index.Search("Z").Count()); });
-            }
+            await Task.WhenAll(
+                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("A").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("B").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("C").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("D").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("Z").Count().ShouldEqual(61); }));
         }
 
         /// <summary>
@@ -135,7 +103,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <returns>The pages contained within the compressed test file.</returns>
         private IEnumerable<KeyValuePair<string, string>> EnumeratePages()
         {
-            using (var fileStream = new FileStream("WikipediaPages.dat", FileMode.Open, FileAccess.Read))
+            using (var fileStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(typeof(ActionExtensions), "WikipediaPages.dat"))
             {
                 using (var zipStream = new GZipStream(fileStream, CompressionMode.Decompress))
                 {

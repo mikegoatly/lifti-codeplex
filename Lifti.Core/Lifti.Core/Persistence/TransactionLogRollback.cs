@@ -30,18 +30,8 @@ namespace Lifti.Persistence
         /// <param name="dataFileManager">The file manager for the underlying data file.</param>
         public TransactionLogRollback(ILogFileManager logFileManager, IDataFileManager dataFileManager)
         {
-            if (logFileManager == null)
-            {
-                throw new ArgumentNullException(nameof(logFileManager));
-            }
-
-            if (dataFileManager == null)
-            {
-                throw new ArgumentNullException(nameof(dataFileManager));
-            }
-
-            this.logFileManager = logFileManager;
-            this.dataFileManager = dataFileManager;
+            this.logFileManager = logFileManager ?? throw new ArgumentNullException(nameof(logFileManager));
+            this.dataFileManager = dataFileManager ?? throw new ArgumentNullException(nameof(dataFileManager));
         }
 
         /// <summary>

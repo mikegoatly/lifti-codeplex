@@ -6,21 +6,21 @@ namespace Lifti.Tests.Persistence.TransactionLogFactoryTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for creating a new <see cref="TransactionLog"/> instance using a <see cref="TransactionLogFactory"/>.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CreatingNewTransactionLog
     {
         /// <summary>
         /// The factory should pass a created transaction log instance the current total page count
         /// and data file manager from the provided page manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldPassTheOriginalPageCount()
         {
             var logFile = new Mock<ILogFileManager>();
@@ -43,7 +43,7 @@ namespace Lifti.Tests.Persistence.TransactionLogFactoryTests
         /// The construction of a new transaction log should cause the log file
         /// to have a new transaction initialized in it.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCauseTheLogFileToInitializeANewTransaction()
         {
             var logFile = new Mock<ILogFileManager>(MockBehavior.Strict);
@@ -66,7 +66,7 @@ namespace Lifti.Tests.Persistence.TransactionLogFactoryTests
         /// The construction of a new transaction log should cause the log file
         /// to be set up with the provided transaction id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldConfigureTheTransactionLogWithTheCorrectTransactionId()
         {
             var logFile = new Mock<ILogFileManager>(MockBehavior.Strict);

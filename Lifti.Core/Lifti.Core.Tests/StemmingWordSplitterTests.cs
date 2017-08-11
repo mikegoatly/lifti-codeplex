@@ -5,18 +5,18 @@ namespace Lifti.Tests
 {
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the stemming word splitter class.
     /// </summary>
-    [TestClass]
-    public class StemmingWordSplitterTests : UnitTestBase
+    [TestFixture]
+    public class StemmingWordSplitterTests
     {
         /// <summary>
         /// Tests that an the empty string yields no tokens.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void EmptyStringYieldsNoTokens()
         {
             var splitter = new StemmingWordSplitter();
@@ -26,7 +26,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that a short word ending id ed is processed correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShortWordEndingInEd()
         {
             var splitter = new StemmingWordSplitter();
@@ -36,7 +36,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that one word yields one token.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void OneWordYieldsOneToken()
         {
             var splitter = new StemmingWordSplitter();
@@ -51,7 +51,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that multiple words yields multiple token.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void MultipleWordsYieldMultipleTokens()
         {
             var splitter = new StemmingWordSplitter();
@@ -72,7 +72,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that a duplicate word only yields one result.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void DuplicateWordsYieldMultipleTokens()
         {
             var splitter = new StemmingWordSplitter();

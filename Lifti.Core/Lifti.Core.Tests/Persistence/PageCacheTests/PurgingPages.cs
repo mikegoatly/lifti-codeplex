@@ -5,20 +5,20 @@ namespace Lifti.Tests.Persistence.PageCacheTests
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for purging pages from a <see cref="PageCache"/> instance.
     /// </summary>
-    [TestClass]
-    public class PurgingPages : UnitTestBase
+    [TestFixture]
+    public class PurgingPages
     {
         /// <summary>
         /// If a request for a single page to be purged is made, it should be honoured.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveSinglePageFromCache()
         {
             var page = new Mock<IDataPage>();
@@ -42,7 +42,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If a request for multiple pages to be purged is made, it should be honoured.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveMultiplePagesFromCache()
         {
             var page = new Mock<IDataPage>();
@@ -66,7 +66,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If a request to purge a page that isn't currently cached, it should have no effect.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldHaveNoEffectIfPurgedPagesNotInCache()
         {
             var page = new Mock<IDataPage>();
@@ -95,7 +95,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// When purging pages, associated headers should not be purged.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldOnlyPurgePagesNotAssociatedHeaders()
         {
             var page = new Mock<IDataPage>();
@@ -119,11 +119,11 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If the provided list of pages to purge is null, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionIfListOfPagesIsNull()
         {
             var cache = new PageCache();
-            AssertRaisesArgumentNullException(() => cache.PurgePages(null), "pages");
+            this.AssertRaisesArgumentNullException(() => cache.PurgePages(null), "pages");
         }
     }
 }

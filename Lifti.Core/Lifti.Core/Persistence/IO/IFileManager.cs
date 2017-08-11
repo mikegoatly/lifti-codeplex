@@ -20,17 +20,9 @@ namespace Lifti.Persistence.IO
         /// Gets a value indicating whether this instance created the data file.
         /// </summary>
         /// <value>
-        ///     <c>true</c> if this instance is created the data file for the first time; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is created the data file for the first time; otherwise, <c>false</c>.
         /// </value>
         bool IsNewFile { get; }
-
-        /// <summary>
-        /// Gets the name of the file the IO manager is managing.
-        /// </summary>
-        /// <value>
-        /// The name of the file.
-        /// </value>
-        string FilePath { get; }
 
         /// <summary>
         /// Reads a chunk of raw data from the file.

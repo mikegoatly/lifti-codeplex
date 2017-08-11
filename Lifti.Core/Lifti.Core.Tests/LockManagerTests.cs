@@ -11,19 +11,19 @@ namespace Lifti.Tests
 
     using Lifti.Locking;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the <see cref="LockManager"/> class.
     /// </summary>
-    [TestClass]
-    public class LockManagerTests : UnitTestBase
+    [TestFixture]
+    public class LockManagerTests
     {
         /// <summary>
         /// Tests that obtaining a read lock causes the read lock acquired event to be raised. 
         /// The release lock counterpart should automatically occur when the lock is disposed.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ObtainingReadLockCausesEventToBeRaised()
         {
             var output = new List<string>();
@@ -44,7 +44,7 @@ namespace Lifti.Tests
         /// Tests that obtaining a write lock causes the read lock acquired event to be raised. 
         /// The release lock counterpart should automatically occur when the lock is disposed.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ObtainingWriteLockCausesEventToBeRaised()
         {
             var output = new List<string>();
@@ -65,7 +65,7 @@ namespace Lifti.Tests
         /// Tests that obtaining a read lock causes no read lock acquired events to be raised
         /// when the lock manager is disabled.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ObtainingReadLockCausesNoEventsToBeRaisedWhenDisabled()
         {
             var output = new List<string>();
@@ -86,7 +86,7 @@ namespace Lifti.Tests
         /// Tests that obtaining a write lock causes no write lock acquired events to be raised
         /// when the lock manager is disabled
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ObtainingWriteLockCausesNoEventsToBeRaisedWhenDisabled()
         {
             var output = new List<string>();
@@ -106,7 +106,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that multiple read locks are allowed simultaneously.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void MultipleReadLocksShouldBeAllowedSimultaneously()
         {
             var threadActions = new[]
@@ -138,7 +138,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that read locks are blocked while a write lock is active.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ReadLocksShouldBlockedWhileWriteLockIsActive()
         {
             var threadActions = new[]
@@ -165,7 +165,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that write locks are blocked while a read lock is active.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void WriteLocksShouldBlockedWhileReadLockIsActive()
         {
             var threadActions = new[]
@@ -193,7 +193,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that write locks are blocked while another write lock is active.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void WriteLocksShouldBlockWhileWriteLockIsPending()
         {
             var threadActions = new[]

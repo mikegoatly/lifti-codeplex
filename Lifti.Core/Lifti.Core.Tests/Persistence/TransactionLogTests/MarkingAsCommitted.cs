@@ -6,21 +6,21 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for setting the transaction log state to committed.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class MarkingAsCommitted : TransactionLogTestBase
     {
         /// <summary>
         /// Marking the transaction log should just call through to the log file manager, setting the
         /// log state to TransactionCommitted..
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldSetTheLogFileStateToCommitted()
         {
             var dataFileManager = new Mock<IDataFileManager>();

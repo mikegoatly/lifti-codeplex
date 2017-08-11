@@ -8,90 +8,90 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for indexing items in the persisted full text index.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class IndexingItem : PersistedFullTextIndexTestBase
     {
         /// <summary>
         /// Indexing a null list of items should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingNullListOfItemsShouldRaiseException()
         {
             var index = CreatePersistedFullTextIndex();
-            AssertRaisesArgumentNullException(() => index.Index(null, c => c), "itemKeys");
+            this.AssertRaisesArgumentNullException(() => index.Index(null, c => c), "itemKeys");
         }
 
         /// <summary>
         /// Indexing an item against null text should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingWithNullTextShouldRaiseException()
         {
             var index = CreatePersistedFullTextIndex();
-            AssertRaisesArgumentNullException(() => index.Index("test", (string)null), "text");
+            this.AssertRaisesArgumentNullException(() => index.Index("test", (string)null), "text");
         }
 
         /// <summary>
         /// Indexing an item against a null text reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemWithNullTextReaderShouldRaiseException()
         {
             var index = CreatePersistedFullTextIndex();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer(), c => c.Name, null), "readText");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer(), c => c.Name, null), "readText");
         }
 
         /// <summary>
         /// Indexing an item against a null key reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemWithNullKeyReaderShouldRaiseException()
         {
             var index = CreatePersistedFullTextIndex();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer(), null, c => c.Biography), "readKey");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer(), null, c => c.Biography), "readKey");
         }
 
         /// <summary>
         /// Indexing a list of items against a null text reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemsWithNullTextReaderShouldRaiseException()
         {
             var index = CreatePersistedFullTextIndex();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer[0], c => c.Name, null), "readText");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer[0], c => c.Name, null), "readText");
         }
 
         /// <summary>
         /// Indexing a list of items against a null key reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemsWithNullKeyReaderShouldRaiseException()
         {
             var index = CreatePersistedFullTextIndex();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer[0], null, c => c.Biography), "readKey");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer[0], null, c => c.Biography), "readKey");
         }
 
         /// <summary>
         /// Indexing a list of items against a null key reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemsWithNullItemListShouldRaiseException()
         {
             var index = CreatePersistedFullTextIndex();
-            AssertRaisesArgumentNullException(() => index.Index((IEnumerable<Customer>)null, c => c.Name, c => c.Biography), "items");
+            this.AssertRaisesArgumentNullException(() => index.Index((IEnumerable<Customer>)null, c => c.Name, c => c.Biography), "items");
         }
 
         /// <summary>
         /// A new entry should be added for the indexed item.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldAddEntryForIndexedItem()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);
@@ -110,7 +110,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <summary>
         /// A new entry should be added each time a new node is created.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldAddEntryForEachNodeCreatedOnFirstUse()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);
@@ -131,7 +131,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <summary>
         /// Existing node entries should be re-used when indexing subsequent words.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NodeEntriesShouldBeReusedOnSubsequentIndexing()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);
@@ -154,7 +154,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <summary>
         /// Item references should be added for each indexed word.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ItemReferenceShouldBeAddedForEachIndexedWord()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);
@@ -179,7 +179,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// When an item is re-indexed and nodes are initially removed, the same ids should
         /// be re-used.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ReindexingAnItemShouldReuseNodeIds()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);

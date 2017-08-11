@@ -5,19 +5,19 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
 {
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for re-indexing items in an <see cref="UpdatableFullTextIndex{TKey}"/>.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Reindexing
     {
         /// <summary>
         /// Tests that re-indexing an item after its text has changed should remove only the 
         /// old words from the index, and add in the new ones.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ReindexingAnItemAfterTextChangedShouldRemoveOnlyTheOldWordsFromTheIndex()
         {
             var item1 = new Customer { Name = "Test1", Biography = "Test" };
@@ -42,7 +42,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// Tests that re-indexing all items after their text has changed should effectively
         /// rebuild the index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ReindexingAllItemAfterTextChangedShouldRebuildIndex()
         {
             var item1 = new Customer { Name = "Test1", Biography = "Testing" };

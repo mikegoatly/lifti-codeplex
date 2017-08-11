@@ -6,20 +6,20 @@ namespace Lifti.Tests
     using System.Collections.Generic;
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the <see cref="XmlWordSplitter"/> class.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class XmlWordSplitterTests
     {
         /// <summary>
         /// Tests that an the empty string yields no tokens.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void EmptyStringYieldsNoTokens()
         {
             var innerSplitter = new Mock<IWordSplitter>();
@@ -31,7 +31,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that an xml string that only contains nodes, and no text, yields no words.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void EmptyXmlNodesYieldsNoTokens()
         {
             var innerSplitter = new Mock<IWordSplitter>();
@@ -42,7 +42,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Any text contained within nodes should be passed to the inner splitter and yielded.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldPassInnerTextToInnerSplitter()
         {
             var innerSplitter = new WordSplitter();
@@ -60,7 +60,7 @@ namespace Lifti.Tests
         /// Any text contained within nodes should be passed to the inner splitter and yielded. Duplicate words should only
         /// be yielded once, even if they are found within multiple nodes.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCombineLocatedWords()
         {
             var innerSplitter = new WordSplitter();

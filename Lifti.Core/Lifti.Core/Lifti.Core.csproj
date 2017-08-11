@@ -1,190 +1,48 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{94F46234-045B-438C-918D-AE805684A158}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <PackageLicenseUrl>Subject to the MIT License - see https://github.com/mikegoatly/lifti for more information</PackageLicenseUrl>
+    <Copyright>Copyright © 2017</Copyright>
+    <PackageProjectUrl>https://github.com/mikegoatly/lifti</PackageProjectUrl>
+    <NeutralLanguage>en</NeutralLanguage>
     <RootNamespace>Lifti</RootNamespace>
     <AssemblyName>Lifti</AssemblyName>
-    <DefaultLanguage>en-US</DefaultLanguage>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\Lifti.XML</DocumentationFile>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatSpecificWarningsAsErrors />
+    <DocumentationFile>bin\Release\netstandard1.4\Lifti.Core.xml</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\Lifti.XML</DocumentationFile>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <TreatSpecificWarningsAsErrors />
+    <DocumentationFile>bin\Debug\netstandard1.4\Lifti.Core.xml</DocumentationFile>
   </PropertyGroup>
+
   <ItemGroup>
-    <Compile Include="Extensibility\IIndexAddIn.cs" />
-    <Compile Include="Extensibility\IIndexExtensibilityService.cs" />
-    <Compile Include="Extensibility\IndexExtensibilityService.cs" />
-    <Compile Include="Extensibility\IndexNodeEventArgs.cs" />
-    <Compile Include="Extensibility\ItemEventArgs.cs" />
-    <Compile Include="Extensibility\ItemNodeEventArgs.cs" />
-    <Compile Include="Extensibility\ItemWordIndexedEventArgs.cs" />
-    <Compile Include="FullTextIndex.cs" />
-    <Compile Include="IFullTextIndex.cs" />
-    <Compile Include="IFullTextIndexExtensions.cs" />
-    <Compile Include="IndexNode.cs" />
-    <Compile Include="IndexNodeExtensions.cs" />
-    <Compile Include="IQueryContext.cs" />
-    <Compile Include="ItemWordMatch.cs" />
-    <Compile Include="ItemWordMatchEqualityComparer.cs" />
-    <Compile Include="IUpdatableFullTextIndex.cs" />
-    <Compile Include="IWordSplitter.cs" />
-    <Compile Include="LiftiException.cs" />
-    <Compile Include="Locking\ILock.cs" />
-    <Compile Include="Locking\ILockManager.cs" />
-    <Compile Include="Locking\LockManager.cs" />
-    <Compile Include="Locking\NullLock.cs" />
-    <Compile Include="Locking\ReadLock.cs" />
-    <Compile Include="Locking\WriteLock.cs" />
-    <Compile Include="PersistedFullTextIndex.cs" />
-    <Compile Include="PersistedIndexNode.cs" />
-    <Compile Include="Persistence\BufferedPageManager.cs" />
-    <Compile Include="Persistence\CachedPage.cs" />
-    <Compile Include="Persistence\CachedPageComparer.cs" />
-    <Compile Include="Persistence\DataPage.cs" />
-    <Compile Include="Persistence\DataPageCollection.cs" />
-    <Compile Include="Persistence\DataPageEntry.cs" />
-    <Compile Include="Persistence\DataPageHeader.cs" />
-    <Compile Include="Persistence\GenericPersistence.cs" />
-    <Compile Include="Persistence\IDataPage.cs" />
-    <Compile Include="Persistence\IDataPageCollection.cs" />
-    <Compile Include="Persistence\IDataPageEntry.cs" />
-    <Compile Include="Persistence\IDataPageHeader.cs" />
-    <Compile Include="Persistence\IndexNodeDataPage.cs" />
-    <Compile Include="Persistence\IndexNodeEntryBase.cs" />
-    <Compile Include="Persistence\IO\BinaryReaderWriterFactory.cs" />
-    <Compile Include="Persistence\IO\DataFileManager.cs" />
-    <Compile Include="Persistence\IO\DataPool.cs" />
-    <Compile Include="Persistence\IO\FileManagerBase.cs" />
-    <Compile Include="Persistence\IO\IDataFileManager.cs" />
-    <Compile Include="Persistence\IO\IFileManager.cs" />
-    <Compile Include="Persistence\IO\ILogFileManager.cs" />
-    <Compile Include="Persistence\IO\IOExtensions.cs" />
-    <Compile Include="Persistence\IO\LogFileManager.cs" />
-    <Compile Include="Persistence\IO\PooledDataBinaryReader.cs" />
-    <Compile Include="Persistence\IO\PooledDataBinaryWriter.cs" />
-    <Compile Include="Persistence\IPageCache.cs" />
-    <Compile Include="Persistence\IPageManager.cs" />
-    <Compile Include="Persistence\IPersistedEntryManager.cs" />
-    <Compile Include="Persistence\IPersistenceSettings.cs" />
-    <Compile Include="Persistence\ItemEntry.cs" />
-    <Compile Include="Persistence\ItemIndexDataPage.cs" />
-    <Compile Include="Persistence\ItemNodeIndexDataPage.cs" />
-    <Compile Include="Persistence\ItemNodeIndexEntry.cs" />
-    <Compile Include="Persistence\ItemReferenceIndexNodeEntry.cs" />
-    <Compile Include="Persistence\ITransactionLog.cs" />
-    <Compile Include="Persistence\ITransactionLogFactory.cs" />
-    <Compile Include="Persistence\ITransactionLogRollback.cs" />
-    <Compile Include="Persistence\ITypePersistence.cs" />
-    <Compile Include="Persistence\LinkedListExtensions.cs" />
-    <Compile Include="Persistence\NodeReferenceIndexNodeEntry.cs" />
-    <Compile Include="Persistence\PageCache.cs" />
-    <Compile Include="Persistence\PageManager.cs" />
-    <Compile Include="Persistence\PersistedEntryManager.cs" />
-    <Compile Include="Persistence\PersistenceException.cs" />
-    <Compile Include="Persistence\PersistenceSettings.cs" />
-    <Compile Include="Persistence\StringPersistence.cs" />
-    <Compile Include="Persistence\TransactionLog.cs" />
-    <Compile Include="Persistence\TransactionLogFactory.cs" />
-    <Compile Include="Persistence\TransactionLogRollback.cs" />
-    <Compile Include="Persistence\TypePersistenceBase.cs" />
-    <Compile Include="PorterStemmer\Stemmer.cs" />
-    <Compile Include="PorterStemmer\StemRegion.cs" />
-    <Compile Include="PorterStemmer\StringBuilderExtensions.cs" />
-    <Compile Include="PorterStemmer\WordReplacement.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Resource1.Designer.cs">
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
-    <Compile Include="QueryContext.cs" />
-    <Compile Include="Querying\AdjacentWordsQueryPart.cs" />
-    <Compile Include="Querying\AndQueryOperator.cs" />
-    <Compile Include="Querying\BinaryQueryOperator.cs" />
-    <Compile Include="Querying\BracketedQueryPart.cs" />
-    <Compile Include="Querying\ExactWordQueryPart.cs" />
-    <Compile Include="Querying\FullTextQuery.cs" />
-    <Compile Include="Querying\IBinaryQueryOperator.cs" />
-    <Compile Include="Querying\IFullTextQuery.cs" />
-    <Compile Include="Querying\IQueryParser.cs" />
-    <Compile Include="Querying\IQueryPart.cs" />
-    <Compile Include="Querying\IQueryResult.cs" />
-    <Compile Include="Querying\IWordQueryPart.cs" />
-    <Compile Include="Querying\LiftiQueryParser.cs" />
-    <Compile Include="Querying\LikeWordQueryPart.cs" />
-    <Compile Include="Querying\NearQueryOperator.cs" />
-    <Compile Include="Querying\OrQueryOperator.cs" />
-    <Compile Include="Querying\PositionalWordsQueryPart.cs" />
-    <Compile Include="Querying\PrecedingNearQueryOperator.cs" />
-    <Compile Include="Querying\PrecedingQueryOperator.cs" />
-    <Compile Include="Querying\QueryParserException.cs" />
-    <Compile Include="Querying\QueryResult.cs" />
-    <Compile Include="Querying\SimpleQueryParser.cs" />
-    <Compile Include="Querying\Tokenization\QueryToken.cs" />
-    <Compile Include="Querying\Tokenization\QueryTokenizer.cs" />
-    <Compile Include="Querying\WordQueryPart.cs" />
-    <Compile Include="SerializationHelper.cs" />
-    <Compile Include="SplitWord.cs" />
-    <Compile Include="StemmingWordSplitter.cs" />
-    <Compile Include="UpdatableFullTextIndex.cs" />
-    <Compile Include="WordSplitter.cs" />
-    <Compile Include="XmlWordSplitter.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator></Generator>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resource1.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="PCLStorage, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
-      <HintPath>..\packages\PCLStorage.1.0.2\lib\portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.dll</HintPath>
-    </Reference>
-    <Reference Include="PCLStorage.Abstractions, Version=1.0.2.0, Culture=neutral, PublicKeyToken=286fe515a2c35b64, processorArchitecture=MSIL">
-      <HintPath>..\packages\PCLStorage.1.0.2\lib\portable-net45+wp8+wpa81+win8+monoandroid+monotouch+Xamarin.iOS+Xamarin.Mac\PCLStorage.Abstractions.dll</HintPath>
-    </Reference>
+    <Folder Include="Resources\" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

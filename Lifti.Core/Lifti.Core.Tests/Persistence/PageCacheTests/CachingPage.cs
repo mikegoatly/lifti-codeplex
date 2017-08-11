@@ -5,20 +5,20 @@ namespace Lifti.Tests.Persistence.PageCacheTests
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the page caching mechanism of the <see cref="PageCache"/>.
     /// </summary>
-    [TestClass]
-    public class CachingPage : UnitTestBase
+    [TestFixture]
+    public class CachingPage
     {
         /// <summary>
         /// The cache should return the page once it has been cached.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCacheAndReturnPageSuccessfully()
         {
             var page = new Mock<IDataPage>();
@@ -33,7 +33,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// The cache should not raise an exception if the page is already cached.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldNotRaiseExceptionIfPageAlreadyCached()
         {
             var page = new Mock<IDataPage>();
@@ -52,11 +52,11 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If the provided page is null, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionIfPageIsNull()
         {
             var cache = new PageCache();
-            AssertRaisesArgumentNullException(() => cache.CachePage(null), "page");
+            this.AssertRaisesArgumentNullException(() => cache.CachePage(null), "page");
         }
     }
 }

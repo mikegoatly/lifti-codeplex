@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.TransactionLogFactoryTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests the disposing behaviour of the <see cref="TransactionLogFactory"/>
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Disposing
     {
         /// <summary>
         /// The underlying log file manager should be disposed when the factory is disposed.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldDisposeTheLogFile()
         {
             var logFile = new Mock<ILogFileManager>();
@@ -34,7 +34,7 @@ namespace Lifti.Tests.Persistence.TransactionLogFactoryTests
         /// The underlying log file manager should only be disposed once if the dispose
         /// method is called multiple times.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void MultipleDisposalsShouldDisposeTheLogFileOnce()
         {
             var logFile = new Mock<ILogFileManager>();

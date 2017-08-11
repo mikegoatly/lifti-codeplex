@@ -5,20 +5,20 @@ namespace Lifti.Tests.Persistence.PageCacheTests
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the header caching mechanism of the <see cref="PageCache"/>.
     /// </summary>
-    [TestClass]
-    public class CachingHeader : UnitTestBase
+    [TestFixture]
+    public class CachingHeader
     {
         /// <summary>
         /// The cache should return the header once it has been cached.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCacheAndReturnHeaderSuccessfully()
         {
             var header = new Mock<IDataPageHeader>();
@@ -33,7 +33,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// The cache should not raise an exception if the header is already cached.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldNotRaiseExceptionIfHeaderAlreadyCached()
         {
             var header = new Mock<IDataPageHeader>();
@@ -52,11 +52,11 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If the provided header is null, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionIfHeaderIsNull()
         {
             var cache = new PageCache();
-            AssertRaisesArgumentNullException(() => cache.CacheHeader(null), "header");
+            this.AssertRaisesArgumentNullException(() => cache.CacheHeader(null), "header");
         }
     }
 }

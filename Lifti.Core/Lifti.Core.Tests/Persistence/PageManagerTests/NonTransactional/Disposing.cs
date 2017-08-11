@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
     using Lifti.Persistence;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for disposing a page manager instance.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Disposing : PageManagerTestBase
     {
         /// <summary>
         /// When a page manager is disposed it should dispose the underlying data file manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldDisposeDataFileManager()
         {
             var dataFileManager =
@@ -41,7 +41,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// If the page manager is disposed multiple times, it should still only dispose the data file manager once.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldNotDisposeDataFileManagerMultipleTimes()
         {
             var dataFileManager =

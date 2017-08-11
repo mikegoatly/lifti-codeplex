@@ -7,8 +7,6 @@ namespace Lifti
     using System.Collections.Generic;
     using System.Linq;
 
-    using Lifti.Properties;
-
     /// <summary>
     /// Stores location-based information about a word an item was indexed against.
     /// </summary>
@@ -135,7 +133,7 @@ namespace Lifti
         {
             if (!this.Equals(nextMatch))
             {
-                throw new InvalidOperationException(Resources.UnableToPerformPositionalMatchBetweenDifferentItems);
+                throw new InvalidOperationException(ResourceString.UnableToPerformPositionalMatchBetweenDifferentItems);
             }
 
             var thisInstance = this;

@@ -7,20 +7,20 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for inserting last into a collection.
     /// </summary>
-    [TestClass]
-    public class InsertingLast : UnitTestBase
+    [TestFixture]
+    public class InsertingLast
     {
         /// <summary>
         /// An entry should be insertable into an empty collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertIntoEmptyCollection()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -34,7 +34,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// An entry should be insertable into a populated collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertIntoPopulatedCollection()
         {
             var header1 = new Mock<IDataPageHeader>();

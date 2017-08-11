@@ -5,8 +5,8 @@ namespace Lifti.Querying
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Resources;
 
-    using Lifti.Properties;
     using Lifti.Querying.Tokenization;
 
     /// <summary>
@@ -78,7 +78,7 @@ namespace Lifti.Querying
                                : ComposePart(rootPart, new BracketedQueryPart(bracketedPart));
 
                 default:
-                    throw new QueryParserException(Resources.UnexpectedTokenEncountered, token.TokenType);
+                    throw new QueryParserException(ResourceString.UnexpectedTokenEncountered, token.TokenType);
             }
         }
 
@@ -128,7 +128,7 @@ namespace Lifti.Querying
         {
             if (existingPart == null)
             {
-                throw new QueryParserException(Resources.UnexpectedOperator, operatorType);
+                throw new QueryParserException(ResourceString.UnexpectedOperator, operatorType);
             }
 
             var existingBinaryOperator = existingPart as IBinaryQueryOperator;
@@ -173,7 +173,7 @@ namespace Lifti.Querying
                     return new PrecedingQueryOperator(leftPart, rightPart);
 
                 default:
-                    throw new QueryParserException(Resources.UnexpectedOperatorInternal, tokenType);
+                    throw new QueryParserException(ResourceString.UnexpectedOperatorInternal, tokenType);
             }
         }
 
@@ -198,7 +198,7 @@ namespace Lifti.Querying
                     return OperatorPrecedence.Locational;
 
                 default:
-                    throw new QueryParserException(Resources.UnexpectedOperatorInternal, tokenType);
+                    throw new QueryParserException(ResourceString.UnexpectedOperatorInternal, tokenType);
             }
         }
 
@@ -249,7 +249,7 @@ namespace Lifti.Querying
                     return this.enumerator.Current;
                 }
 
-                throw new QueryParserException(Resources.UnexpectedEndOfQuery);
+                throw new QueryParserException(ResourceString.UnexpectedEndOfQuery);
             }
 
             /// <summary>
@@ -275,7 +275,7 @@ namespace Lifti.Querying
 
                 if (!matchedTerminator)
                 {
-                    throw new QueryParserException(Resources.ExpectedToken, terminatingToken);
+                    throw new QueryParserException(ResourceString.ExpectedToken, terminatingToken);
                 }
             }
         }

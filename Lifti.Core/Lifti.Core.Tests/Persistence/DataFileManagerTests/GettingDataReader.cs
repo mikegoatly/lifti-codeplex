@@ -3,91 +3,60 @@
 
 namespace Lifti.Tests.Persistence.DataFileManagerTests
 {
+    #region Using statements
+
     using System;
-    using System.IO;
 
-    using Lifti.Persistence.IO;
+    using NUnit.Framework;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Should;
+
+    #endregion
 
     /// <summary>
     /// Tests for getting a data reader from the IO manager.
     /// </summary>
-    [TestClass]
-    public class GettingDataReader : UnitTestBase
+    [TestFixture]
+    public class GettingDataReader : DataFileManagerTest
     {
         /// <summary>
-        /// The path to the test file.
+        /// An exception should be thrown if an offset of greater than the file length is requested.
         /// </summary>
-        private string path;
-
-        /// <summary>
-        /// Cleans up before and after each test.
-        /// </summary>
-        [TestCleanup]
-        [TestInitialize]
-        public void TestCleanup()
+        [Test]
+        public void ShouldRaiseExceptionIfOffsetGreaterThanFileLengthRequested()
         {
-            this.path = $"testindex{Guid.NewGuid()}.dat";
-            FileHelper.DeleteIfExistsAsync(this.path).GetAwaiter().GetResult();
-        }
-
-        /// <summary>
-        /// A data reader should be returned with the exact length requested.
-        /// </summary>
-        [TestMethod]
-        public void ShouldReturnReaderWithCorrectLength()
-        {
-            FileHelper.CreateFile(this.path, "Test");
-
-            using (var manager = new DataFileManager(this.path))
-            {
-                var reader = manager.GetDataReader(2, 2);
-                Assert.IsTrue(reader.BaseStream.CanRead);
-                Assert.AreEqual(0, reader.BaseStream.Position);
-                Assert.AreEqual(2, reader.BaseStream.Length);
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() => this.Sut.GetDataReader(4, 2), "Specified argument was out of the range of valid values.\r\nParameter name: fileOffset");
         }
 
         /// <summary>
         /// An exception should be thrown if an offset of less than 0 is requested.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionIfOffsetLessThanZeroRequested()
         {
-            FileHelper.CreateFile(this.path, "Test");
-
-            using (var manager = new DataFileManager(this.path))
-            {
-                AssertRaisesException<ArgumentOutOfRangeException>(() => manager.GetDataReader(-1, 2), "Specified argument was out of the range of valid values.\r\nParameter name: fileOffset");
-            }
-        }
-
-        /// <summary>
-        /// An exception should be thrown if an offset of greater than the file length is requested.
-        /// </summary>
-        [TestMethod]
-        public void ShouldRaiseExceptionIfOffsetGreaterThanFileLengthRequested()
-        {
-            FileHelper.CreateFile(this.path, "Test");
-
-            using (var manager = new DataFileManager(this.path))
-            {
-                AssertRaisesException<ArgumentOutOfRangeException>(() => manager.GetDataReader(4, 2), "Specified argument was out of the range of valid values.\r\nParameter name: fileOffset");
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() => this.Sut.GetDataReader(-1, 2), "Specified argument was out of the range of valid values.\r\nParameter name: fileOffset");
         }
 
         /// <summary>
         /// An exception should be thrown if an extent of greater than the file length is requested.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionIfRequestedExtentWouldOverwriteEndOfFile()
         {
-            FileHelper.CreateFile(this.path, "Test");
+            Assert.Throws<ArgumentOutOfRangeException>(() => this.Sut.GetDataReader(2, 3), "File is not currently large enough to accommodate the required length of data.\r\nParameter name: requiredLength");
+        }
 
-            using (var manager = new DataFileManager(this.path))
+        /// <summary>
+        /// A data reader should be returned with the exact length requested.
+        /// </summary>
+        [Test]
+        public void ShouldReturnReaderWithCorrectLength()
+        {
+            using (var reader = this.Sut.GetDataReader(2, 2))
             {
-                AssertRaisesException<ArgumentOutOfRangeException>(() => manager.GetDataReader(2, 3), "File is not currently large enough to accommodate the required length of data.\r\nParameter name: requiredLength");
+                reader.BaseStream.CanRead.ShouldBeTrue();
+                reader.BaseStream.Position.ShouldEqual(0L);
+                reader.BaseStream.Length.ShouldEqual(2L);
             }
         }
     }

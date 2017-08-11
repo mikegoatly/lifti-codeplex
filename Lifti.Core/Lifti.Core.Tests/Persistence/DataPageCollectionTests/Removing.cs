@@ -8,20 +8,20 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for removing pages from the collection.
     /// </summary>
-    [TestClass]
-    public class Removing : UnitTestBase
+    [TestFixture]
+    public class Removing
     {
         /// <summary>
         /// An entry should be removable from the end of the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveEndEntry()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -37,7 +37,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// An entry should be removable from the start of the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveFirstEntry()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -53,7 +53,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// An entry should be removable from the middle of the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveMiddleEntry()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -69,7 +69,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// The last entry should be removable from the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveFinalEntry()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -83,14 +83,14 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// An exception should be thrown if the specified page to remove does not exist in the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfPageToRemoveNotInCollection()
         {
             var header1 = new Mock<IDataPageHeader>();
             var header2 = new Mock<IDataPageHeader>();
 
             var collection = new DataPageCollection(new[] { header1.Object });
-            AssertRaisesException<ArgumentException>(() => collection.Remove(header2.Object), "Page not in list\r\nParameter name: page");
+            Assert.Throws<ArgumentException>(() => collection.Remove(header2.Object), "Page not in list\r\nParameter name: page");
         }
     }
 }

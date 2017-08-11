@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
     using Lifti.Extensibility;
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the Contains method.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Contains
     {
         /// <summary>
         /// The Contains method should return false if the item doesn't exist in the index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void CheckingForAnItemNotInTheIndexShouldReturnFalse()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);
@@ -37,7 +37,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <summary>
         /// The Contains method should return true if the item exists in the index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void CheckingForAnItemInTheIndexShouldReturnTrue()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);

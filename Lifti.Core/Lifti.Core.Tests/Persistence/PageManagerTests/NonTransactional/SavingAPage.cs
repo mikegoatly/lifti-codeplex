@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
     using Lifti.Persistence;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the Save method of the page manager.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class SavingAPage : PageManagerTestBase
     {
         /// <summary>
         /// Saving a populated index node page should call through to the IO manager, saving data in the expected format.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SavingAPopulatedIndexNodePageShouldCallThroughToIOManager()
         {
             // Setup
@@ -48,7 +48,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// Saving a populated item index page should call through to the IO manager, saving data in the expected format.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SavingAPopulatedItemIndexPageShouldCallThroughToIOManager()
         {
             // Setup

@@ -9,20 +9,20 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the logging of affected data to the underlying log file.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class LoggingAffectedData : TransactionLogTestBase
     {
         /// <summary>
         /// If a page header is affected, only the page header data should be written out to the log file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldWriteAffectedPageHeaderDataToLog()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -45,7 +45,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// <summary>
         /// If a page body is affected, the entire page data should be written out to the log file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldWriteAffectedPageDataToLog()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -71,7 +71,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// <summary>
         /// If a page is created during a transaction, only the original header data should be logged.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldOnlyLogHeaderOfPageIfItWasCreated()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -95,7 +95,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// <summary>
         /// If a page is created during a transaction in an extended part of the data file, nothing needs to be logged.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldLogNothingIfPageWasCreatedAfterTheOriginalExtentOfTheDataFile()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -118,7 +118,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// <summary>
         /// Should not write any page data if none is affectd..
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldNotWritePageDataToLogIfNoneAffected()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -136,7 +136,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// <summary>
         /// If the page manager header data if affected, then the original page manager header data should be written out to the log.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldWritePageManagerHeaderDataIfAffected()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -157,7 +157,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// If the transaction log has already written to file once, then any subsequent attempts to log again
         /// should fail.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfTransactionLogAlreadyWrittenToFileOnce()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -167,14 +167,14 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
 
             log.LogExistingDataForAffectedPages();
 
-            AssertRaisesException<PersistenceException>(() => log.LogExistingDataForAffectedPages(), "Transaction log has already been written. Unable to log further information.");
+            Assert.Throws<PersistenceException>(() => log.LogExistingDataForAffectedPages(), "Transaction log has already been written. Unable to log further information.");
         }
 
         /// <summary>
         /// Once the existing data has been written to the log file, the TransactionComplete property should
         /// be set to true.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldMarkTransactionAsCompletedOnceLogged()
         {
             var dataFileManager = new Mock<IDataFileManager>();

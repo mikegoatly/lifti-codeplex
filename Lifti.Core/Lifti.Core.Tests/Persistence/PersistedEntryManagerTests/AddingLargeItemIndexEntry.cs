@@ -7,18 +7,18 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the adding large entries to a page.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class AddingLargeItemIndexEntry : PersistedEntryManagerTestBase
     {
         /// <summary>
         /// If an item is added to a page and it can't fit, a page split should occur.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCausePageSplitIfEntryTooLargeForRemainingPageSpace()
         {
             var pageManager = CreateMockedPageManager();
@@ -60,7 +60,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// If an item is added to a page and it can't fit, a page split should occur. If the item then cannot fit on either
         /// page, another page split should occur.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCauseTwoPageSplitsIfEntryCausesAPageSplitAndCantFitOnEither()
         {
             var pageManager = CreateMockedPageManager();

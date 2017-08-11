@@ -9,8 +9,6 @@ namespace Lifti.Persistence.IO
     using System.IO;
     using System.Threading.Tasks;
 
-    using PCLStorage;
-
     #endregion
 
     /// <summary>
@@ -26,10 +24,20 @@ namespace Lifti.Persistence.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="FileManagerBase"/> class.
         /// </summary>
-        /// <param name="fileName">The name to the backing file, stored in the local storage for the application.</param>
-        protected FileManagerBase(string fileName)
+        /// <param name="stream">The stream being used to manage the file.</param>
+        protected FileManagerBase(Stream stream)
         {
-            this.InitializeAsync(fileName).GetAwaiter().GetResult();
+            if (!stream.CanRead)
+            {
+                throw new ArgumentException(nameof(stream), "Must be able to read from the stream.");
+            }
+
+            if (!stream.CanWrite)
+            {
+                throw new ArgumentException(nameof(stream), "Must be able to write to the stream.");
+            }
+
+            this.DataStream = stream;
         }
 
         /// <summary>
@@ -49,26 +57,9 @@ namespace Lifti.Persistence.IO
         public bool IsNewFile => this.DataStream.Length == 0L;
 
         /// <summary>
-        /// Gets the name of the file the IO manager is managing.
-        /// </summary>
-        /// <value>
-        /// The name of the file.
-        /// </value>
-        public string FilePath { get; private set; }
-
-        /// <summary>
         /// Gets the underlying data stream for the file.
         /// </summary>
         protected Stream DataStream { get; private set; }
-
-        // TODO pass the file path through here
-        public async Task InitializeAsync(string fileName)
-        {
-            var localFolder = FileSystem.Current.LocalStorage;
-            var file = await localFolder.CreateFileAsync(fileName, CreationCollisionOption.OpenIfExists);
-            this.FilePath = file.Path;
-            this.DataStream = await file.OpenAsync(FileAccess.ReadAndWrite);
-        }
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

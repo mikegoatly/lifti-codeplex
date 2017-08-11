@@ -6,21 +6,21 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests getting pages affected during a transaction from the transaction log.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class GettingPagesAffectedByTransaction : TransactionLogTestBase
     {
         /// <summary>
         /// If a page is affected by a header write, it should be returned by the transaction log
         /// cache.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnPageAffectedByHeaderWrite()
         {
             var dataFileManager = new Mock<IDataFileManager>(MockBehavior.Strict);
@@ -40,7 +40,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// If a page is affected by a body write, it should be returned by the transaction log
         /// cache.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnPageAffectedByBodyWrite()
         {
             var dataFileManager = new Mock<IDataFileManager>(MockBehavior.Strict);
@@ -60,7 +60,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// If a page is created, it should be returned by the transaction log
         /// cache.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnPageAffectedByCreation()
         {
             var dataFileManager = new Mock<IDataFileManager>(MockBehavior.Strict);

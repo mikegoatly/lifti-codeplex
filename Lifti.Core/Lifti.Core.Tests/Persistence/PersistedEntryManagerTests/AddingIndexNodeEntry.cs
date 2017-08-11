@@ -7,14 +7,14 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for adding an index node entry to the entry manager.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class AddingIndexNodeEntry : PersistedEntryManagerTestBase
     {
         /// <summary>
@@ -36,7 +36,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// If an item node index entry already exists, linking the item and the node, a duplicate
         /// entry should not be created and no exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ItemNodeIndexEntryShouldNotBeInsertedIfItAlreadyExists()
         {
             var pageManager = this.SetupMultipageNodeCollectionPageManager();
@@ -69,7 +69,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// When an item entry is inserted and it fits into an existing page, it should be inserted into the correct location.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NodeEntryShouldBeInsertedIntoMidPageWhenItFits()
         {
             var pageManager = this.SetupMultipageNodeCollectionPageManager();
@@ -93,7 +93,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// When an item entry is inserted and it fits into an existing page, it should be inserted into the correct location.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ItemEntryShouldBeInsertedIntoMidPageWhenItFits()
         {
             var pageManager = this.SetupMultipageNodeCollectionPageManager();
@@ -123,7 +123,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// When an item entry is inserted and it fits into an existing page, it should be inserted into the correct location.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ItemEntryShouldBeInsertedAtEndOPageWhenItFits()
         {
             var pageManager = this.SetupMultipageNodeCollectionPageManager();
@@ -154,7 +154,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// When an item is inserted with an id that already exists across multiple pages, it should be inserted into the lowest possible
         /// page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ItemEntryShouldBeInsertedIntoLowestPossiblePageWhenItFits()
         {
             var pageManager = this.SetupMultipageNodeCollectionPageManager();
@@ -184,7 +184,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// If an item is inserted and it doesn't fit on the first available page, it should be added to the next page if it fits there.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IfItemWillNotFitOnPageButFitsOnNextPageItShouldBeInsertedThere()
         {
             var pageManager = CreateMockedPageManager();
@@ -229,7 +229,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// If an item is inserted and it doesn't fit on the first available page, it should be added to the next appropriate page if it fits there.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IfItemWillNotFitOnPageButFitsOnLastPageStartingWithIdsItShouldBeInsertedThere()
         {
             var pageManager = CreateMockedPageManager();
@@ -278,7 +278,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// If an item is inserted and it doesn't fit on the first available page, it should be added to the next appropriate page if it fits there.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IfItemWillNotFitOnPageButFitsOnNextPageStartingWithIdsItShouldBeInsertedThere()
         {
             var pageManager = CreateMockedPageManager();
@@ -322,7 +322,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// If an item is inserted and it doesn't fit on the first available page, it should be added to the previous page if it fits there.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IfItemWillNotFitOnPageButFitsOnPreviousPageEndingWithIdItShouldBeInsertedThere()
         {
             var pageManager = CreateMockedPageManager();
@@ -369,7 +369,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// When a new item is added and it causes a page split, if its id is the same as all the ids on the old page, it should be the only
         /// entry on the new page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SplittingAPageWhereItemHasSameIdAsAllOnPageShouldOnlyCauseNewItemToBeOnNewPage()
         {
             var pageManager = CreateMockedPageManager();
@@ -399,7 +399,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// When a new item is added and it causes a page split, if its id is greater than the last id on the old page, it should be the only
         /// entry on the new page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SplittingAPageWhereItemHasToBeAddedAtTheEndShouldOnlyCauseNewItemToBeOnNewPage()
         {
             var pageManager = CreateMockedPageManager();
@@ -429,7 +429,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// When a full page split occurs (i.e. items are automatically moved onto the split page, and the first page ends up smaller,
         /// then the new item should be inserted onto the first page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SplittingAPageWhereisertedMidPageShouldCauseItemToBeInsertedOnFirstPageWhenItIsSmaller()
         {
             var pageManager = CreateMockedPageManager();
@@ -473,7 +473,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// When a full page split occurs (i.e. items are automatically moved onto the split page, and the second page ends up smaller,
         /// then the new item should be inserted onto the first page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SplittingAPageWhereItemInsertedMidPageShouldCauseItemToBeInsertedOnSecondPageWhenItIsSmaller()
         {
             var pageManager = CreateMockedPageManager();

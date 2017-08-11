@@ -8,13 +8,13 @@ namespace Lifti.Tests.Querying
 
     using Lifti.Querying;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the execution of complex LIFTI queries in conjunction with a full text index.
     /// </summary>
-    [TestClass]
-    public class LiftiQueryExecutionTests : UnitTestBase
+    [TestFixture]
+    public class LiftiQueryExecutionTests
     {
         /// <summary>
         /// The indexer used in the tests.
@@ -24,7 +24,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Executing a query with a null root should return no items.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ExecutingQueryWithNullRootShouldReturnNoItems()
         {
             var query = new FullTextQuery();
@@ -34,7 +34,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests exact word matches don't yield like words, even if there are some.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ExactWordMatchShouldOnlyYieldExactWordsEvenIfThereAreLikeWords()
         {
             AssertSearchResults(this.indexer.Search("ear"), "F");
@@ -44,7 +44,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests like word matches.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void LikeWordMatchShouldYieldLikeWords()
         {
             AssertSearchResults(this.indexer.Search("ear*"), "E", "F");
@@ -53,7 +53,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that AND operators restrict results.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void AndOperatorsShouldRestrictResults()
         {
             AssertSearchResults(this.indexer.Search("E* & C* & M*"), "A", "F");
@@ -62,7 +62,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that AND operators where the right search returns nothing returns nothing overall.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void AndOperatorsShouldReturnNoResultsIfRightPartReturnsNothing()
         {
             AssertSearchResults(this.indexer.Search("E* & chee"));
@@ -71,7 +71,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that OR operators expand results.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void OrOperatorsShouldExpandResults()
         {
             AssertSearchResults(this.indexer.Search("E | M*"), "A", "D", "F", "G");
@@ -81,7 +81,7 @@ namespace Lifti.Tests.Querying
         /// Tests that bracketed AND and OR operators that are constructed opposed to
         /// default operator precedent provide the correct results.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void BracketedAndOrOperationsShouldReturnResults()
         {
             // First verify that the default operator precedence works fine
@@ -96,7 +96,7 @@ namespace Lifti.Tests.Querying
         /// Tests that sequential text operations only work where text is sequential, but not if
         /// the words appear in the right order spread out through the text.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SequentialTextOperationsShouldOnlyWorkWhereTextIsSequential()
         {
             // This will not return customer E because X Y and Z are split up with a B
@@ -106,7 +106,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that near operator works in its own right.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NearOperatorShouldReturnResults()
         {
             AssertSearchResults(this.indexer.Search("B ~ I"), "B", "C");
@@ -115,7 +115,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that multiple near operators are combined correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void MultipleNearOperatorsShouldBeRestrictive()
         {
             AssertSearchResults(this.indexer.Search("B ~ Y ~ Z"), "C", "E");
@@ -128,7 +128,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that a NEAR statement can be combined with an OR statement.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NearOperatorShouldWorkWithOrStatements()
         {
             // E will be excluded because it doesn't contain an I or a J
@@ -139,7 +139,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that a simple preceding statement works.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PrecedingOperatorShouldWork()
         {
             AssertSearchResults(this.indexer.Search("P >> M"), "D");
@@ -148,7 +148,7 @@ namespace Lifti.Tests.Querying
         /// <summary>
         /// Tests that the preceding operator works in conjunction with other operators.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PrecedingOperatorShouldWorkInConjunctionWithOtherOperators()
         {
             AssertSearchResults(this.indexer.Search("B >> Z & I"), "A", "C");

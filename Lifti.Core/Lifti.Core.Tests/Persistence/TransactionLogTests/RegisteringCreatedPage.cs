@@ -8,21 +8,21 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Test for when a new page is created during a transaction.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RegisteringCreatedPage : TransactionLogTestBase
     {
         /// <summary>
         /// When a page is registered as being created, it should be reported
         /// as such when requested.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRecordPageAsBeingCreated()
         {
             var dataFileManager = new Mock<IDataFileManager>();

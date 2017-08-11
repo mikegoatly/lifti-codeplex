@@ -7,18 +7,18 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for finding pages by id.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class FindingPagesForId
     {
         /// <summary>
         /// The FindPagesForEntry method should yield no results if the collection is empty.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldNoResultsIfCollectionEmpty()
         {
             var col = new DataPageCollection();
@@ -31,7 +31,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// The FindPagesForEntry method should yield no results if the collection doesn't contain entries for the 
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldNoResultsIfCollectionHasOnePageItDoesntContainId()
         {
             var col = new DataPageCollection(new[] { new DataPageHeader(DataPageType.Items, 0, null, null, 4, 1, 3, 30) });
@@ -44,7 +44,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// The FindPagesForEntry method should yield no results if the collection doesn't contain entries for the 
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldNoResultsIfCollectionHasTwoPagesAndNoneContainId()
         {
             var col = new DataPageCollection(
@@ -63,7 +63,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// The FindPagesForEntry method should yield no results if the collection doesn't contain entries for the 
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldNoResultsIfCollectionHasMultiplePagesAndNoneContainId()
         {
             var col = new DataPageCollection(
@@ -84,7 +84,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// The FindPagesForEntry method should yield a page if the collection contains entries for the 
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldOneResultIfCollectionHasOnePageAndItContainsId()
         {
             var headers = new[] { new DataPageHeader(DataPageType.Items, 0, null, null, 4, 1, 3, 30) };
@@ -99,7 +99,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// The FindPagesForEntry method should yield a page if the collection contains only one page that has entries for the 
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldOneResultIfCollectionHasTwoPagesAndContainsIdInSinglePage()
         {
             var headers = new[] 
@@ -123,7 +123,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// The FindPagesForEntry method should yield a page if the collection contains only one page that has entries for the 
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldOneResultIfCollectionHasMultiplePagesAndItContainsIdInSinglePage()
         {
             var headers = new[] 
@@ -157,7 +157,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// The FindPagesForEntry method should yield a page if the collection contains only one page that has entries for the 
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldMultipleResultIfCollectionHasMultiplePagesAndItContainsIdInMultiplePages()
         {
             var headers = new[] 

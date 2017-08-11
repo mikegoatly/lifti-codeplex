@@ -11,14 +11,14 @@ namespace Lifti.Tests.Persistence.PageManagerTests
     using Lifti.Persistence;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// The base class for page manager unit tests.
     /// </summary>
-    public abstract class PageManagerTestBase : UnitTestBase
+    public abstract class PageManagerTestBase
     {
         /// <summary>
         /// The sequence of bytes that represent an empty/unused data page.

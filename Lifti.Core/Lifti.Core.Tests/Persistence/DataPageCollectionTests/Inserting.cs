@@ -8,20 +8,20 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for inserting items into a <see cref="DataPageCollection"/>.
     /// </summary>
-    [TestClass]
-    public class Inserting : UnitTestBase
+    [TestFixture]
+    public class Inserting
     {
         /// <summary>
         /// An entry should be insertable after the last entry in the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertAfterEntryAtEnd()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -36,7 +36,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// An entry should be insertable after an entry in the middle of the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertAfterEntryInMiddle()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -52,14 +52,14 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// An exception should be thrown if the specified page to insert after does not exist in the collection.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfPageToInsertAfterNotInCollection()
         {
             var header1 = new Mock<IDataPageHeader>();
             var header2 = new Mock<IDataPageHeader>();
             
             var collection = new DataPageCollection();
-            AssertRaisesException<ArgumentException>(() => collection.Insert(header2.Object, header1.Object), "Page not in list\r\nParameter name: afterPage");
+            Assert.Throws<ArgumentException>(() => collection.Insert(header2.Object, header1.Object), "Page not in list\r\nParameter name: afterPage");
         }
     }
 }

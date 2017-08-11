@@ -9,6 +9,7 @@ namespace Lifti
     using Lifti.Extensibility;
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
+    using System.IO;
 
     /// <summary>
     /// An updatable full text index that keeps a persisted file in-sync with the index, meaning that
@@ -66,23 +67,20 @@ namespace Lifti
         /// </summary>
         private readonly Stack<int> reusableItemIds = new Stack<int>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PersistedFullTextIndex&lt;TKey&gt;"/> class.
-        /// </summary>
-        /// <param name="backingFilePath">The path to the backing file. This will get created on first use.</param>
-        public PersistedFullTextIndex(string backingFilePath)
-            : this(backingFilePath, InferTypePersistence())
+        /// <inheritdoc />
+        public PersistedFullTextIndex(Stream backingFileStream)
+            : this(backingFileStream, InferTypePersistence())
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PersistedFullTextIndex&lt;TKey&gt;"/> class.
         /// </summary>
-        /// <param name="backingFilePath">The path to the backing file. This will get created on first use.</param>
+        /// <param name="backingFileStream">The stream for the backing file.</param>
         /// <param name="typePersistence">The type persistence instance capable of reading/writing TKey instances to a binary reader or writer.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "These live for the lifetime of the object and are disposed when this instance is")]
-        public PersistedFullTextIndex(string backingFilePath, ITypePersistence<TKey> typePersistence)
-            : this(new DataFileManager(backingFilePath), typePersistence, new IndexExtensibilityService<TKey>())
+        public PersistedFullTextIndex(Stream backingFileStream, ITypePersistence<TKey> typePersistence)
+            : this(new DataFileManager(backingFileStream), typePersistence, new IndexExtensibilityService<TKey>())
         {
         }
 
@@ -94,12 +92,7 @@ namespace Lifti
         public PersistedFullTextIndex(IPersistedEntryManager<TKey> persistedEntryManager, IIndexExtensibilityService<TKey> extensibilityService)
             : base(extensibilityService)
         {
-            if (persistedEntryManager == null)
-            {
-                throw new ArgumentNullException(nameof(persistedEntryManager));
-            }
-
-            this.PersistedEntryManager = persistedEntryManager;
+            this.PersistedEntryManager = persistedEntryManager ?? throw new ArgumentNullException(nameof(persistedEntryManager));
             this.PersistedEntryManager.Initialize();
 
             this.Extensibility.Add("IndexPersistence", new PersistenceAddIn(this));

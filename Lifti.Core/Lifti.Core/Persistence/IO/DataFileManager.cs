@@ -15,9 +15,9 @@ namespace Lifti.Persistence.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="DataFileManager"/> class.
         /// </summary>
-        /// <param name="dataFileName">The data file path.</param>
-        public DataFileManager(string dataFileName)
-            : base(dataFileName)
+        /// <param name="dataFileStream">The stream for the data file.</param>
+        public DataFileManager(Stream dataFileStream)
+            : base(dataFileStream)
         {
             // TODO - Verify the file header here, writing it out if required
         }

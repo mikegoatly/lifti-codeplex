@@ -6,19 +6,19 @@ namespace Lifti.Tests
     using System;
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the <see cref="ItemWordMatch&lt;TItem&gt;"/> struct.
     /// </summary>
-    [TestClass]
-    public class ItemWordMatchTests : UnitTestBase
+    [TestFixture]
+    public class ItemWordMatchTests
     {
         /// <summary>
         /// Tests that the PositionalIntersect method returns the expected results for
         /// known test cases.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PositionalIntersectShouldReturnCorrectResults()
         {
             var matchA = new ItemWordMatch<string>("Test", new[] { 8, 44 });
@@ -47,10 +47,10 @@ namespace Lifti.Tests
         /// Verifies that when a positional match between matches for different items is attempted,
         /// an exception is thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PositionalIntersectBetweenDifferentItemsShouldRaiseException()
         {
-            AssertRaisesException<InvalidOperationException>(
+            Assert.Throws<InvalidOperationException>(
                 () => new ItemWordMatch<string>("A", new int[0]).PositionalIntersect(new ItemWordMatch<string>("B", new int[0]), 1, 1),
                 "Internal error - Unable to perform positional match between item matches representing different items.");
         }
@@ -58,16 +58,16 @@ namespace Lifti.Tests
         /// <summary>
         /// Verifies that constructing an item word match with null positions raises an exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ConstructingItemWordMatchWithNullPositionsRaisesException()
         {
-            AssertRaisesArgumentNullException(() => new ItemWordMatch<string>("Test", null), "positions");
+            this.AssertRaisesArgumentNullException(() => new ItemWordMatch<string>("Test", null), "positions");
         }
 
         /// <summary>
         /// Simple tests for the IsNear method with different parameters.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IsNearTests()
         {
             var tests = new[]
@@ -101,7 +101,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that calling the Equals(object) method passing in null returns false.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ObjectEqualsNullReturnsFalse()
         {
             Assert.IsFalse(new ItemWordMatch<string>("Test", new int[0]).Equals(null));
@@ -110,7 +110,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that calling the Equals(object) method passing in varying values returns the correct results.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ObjectEqualsValueReturnsTrueWhenAppropriate()
         {
             var a = new ItemWordMatch<string>("Test", new int[0]);
@@ -125,7 +125,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests the equality operator.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestEqualityOperator()
         {
             var a = new ItemWordMatch<string>("Test", new int[0]);
@@ -140,7 +140,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests the inequality operator.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestInequalityOperator()
         {
             var a = new ItemWordMatch<string>("Test", new int[0]);

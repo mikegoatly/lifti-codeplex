@@ -6,20 +6,20 @@ namespace Lifti.Tests
     using Lifti.Locking;
     using Lifti.Querying;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests that exercise the LockManager integration with the full text index.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class FullTextIndexLockTests
     {
         /// <summary>
         /// Tests that the Index method obtains a write lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexItemMethodShouldObtainWriteLock()
         {
             var writeLock = new Mock<ILock>(MockBehavior.Strict);
@@ -38,7 +38,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Index method obtains a write lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexItesmMethodShouldObtainWriteLock()
         {
             var writeLock = new Mock<ILock>(MockBehavior.Strict);
@@ -57,7 +57,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Index method obtains a write lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexMethodShouldObtainWriteLock()
         {
             var writeLock = new Mock<ILock>(MockBehavior.Strict);
@@ -76,7 +76,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Index method obtains a write lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexManyMethodShouldObtainWriteLock()
         {
             var writeLock = new Mock<ILock>(MockBehavior.Strict);
@@ -95,7 +95,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Remove method obtains a write lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemoveMethodShouldObtainWriteLock()
         {
             var writeLock = new Mock<ILock>(MockBehavior.Strict);
@@ -114,7 +114,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Remove method obtains a write lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemoveManyMethodShouldObtainWriteLock()
         {
             var writeLock = new Mock<ILock>(MockBehavior.Strict);
@@ -133,7 +133,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Search method obtains a read lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SearchMethodShouldObtainReadLock()
         {
             var readLock = new Mock<ILock>(MockBehavior.Strict);
@@ -152,7 +152,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Search method that takes a pre-compiled query obtains a read lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void QuerySearchMethodShouldObtainReadLock()
         {
             var readLock = new Mock<ILock>(MockBehavior.Strict);
@@ -171,7 +171,7 @@ namespace Lifti.Tests
         /// <summary>
         /// Tests that the Contains method obtains a read lock.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ContainsShouldObtainReadLock()
         {
             var readLock = new Mock<ILock>(MockBehavior.Strict);
