@@ -46,10 +46,7 @@ namespace Lifti
         /// Gets the item the word was matched for.
         /// </summary>
         /// <value>The indexed item.</value>
-        public TKey Item
-        {
-            get { return this.item; }
-        }
+        public TKey Item => this.item;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="ItemWordMatch&lt;TKey&gt;"/> is a successful match. An match is unsuccessful
@@ -57,25 +54,13 @@ namespace Lifti
         /// positions.
         /// </summary>
         /// <value><c>true</c> if success; otherwise, <c>false</c>.</value>
-        public bool Success
-        {
-            get
-            {
-                return this.positions.Length > 0;
-            }
-        }
+        public bool Success => this.positions.Length > 0;
 
         /// <summary>
         /// Gets the word index positions that this match is relevant to.
         /// </summary>
         /// <value>The relevant word index positions.</value>
-        public IEnumerable<int> Positions
-        {
-            get
-            {
-                return this.positions;
-            }
-        }
+        public IEnumerable<int> Positions => this.positions;
 
         /// <summary>
         /// Implements the operator ==.

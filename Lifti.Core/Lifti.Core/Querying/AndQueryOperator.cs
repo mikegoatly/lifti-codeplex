@@ -22,10 +22,7 @@ namespace Lifti.Querying
         /// Gets the precedence of this operator. This value dictates how binary operators will be combined.
         /// </summary>
         /// <value>The operator precedence.</value>
-        public override OperatorPrecedence Precedence
-        {
-            get { return OperatorPrecedence.And; }
-        }
+        public override OperatorPrecedence Precedence => OperatorPrecedence.And;
 
         /// <summary>
         /// Executes this query part instance against the specified query context.

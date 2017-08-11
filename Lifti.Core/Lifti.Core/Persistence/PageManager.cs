@@ -162,13 +162,7 @@ namespace Lifti.Persistence
         /// Gets the number of unused pages.
         /// </summary>
         /// <value>The unused page count.</value>
-        public virtual int UnusedPageCount
-        {
-            get
-            {
-                return this.availablePages.Count;
-            }
-        }
+        public virtual int UnusedPageCount => this.availablePages.Count;
 
         /// <summary>
         /// Gets the I/O manager for this instance's underlying data file.

@@ -31,10 +31,7 @@ namespace Lifti.Persistence
         /// Gets the type of the entry.
         /// </summary>
         /// <value>The type of the entry.</value>
-        public override IndexNodeEntryType EntryType
-        {
-            get { return IndexNodeEntryType.ItemReference; }
-        }
+        public override IndexNodeEntryType EntryType => IndexNodeEntryType.ItemReference;
 
         /// <summary>
         /// Gets the position in the text for which the item's word was located at.

@@ -48,10 +48,7 @@ namespace Lifti.Persistence
         /// Gets the number of pages managed by the collection.
         /// </summary>
         /// <value>The number of pages.</value>
-        public int Count
-        {
-            get { return this.innerList.Count; }
-        }
+        public int Count => this.innerList.Count;
 
         /// <summary>
         /// Inserts the given page as the first page in the list.

@@ -28,10 +28,7 @@ namespace Lifti
         /// </summary>
         /// <value>The singleton instance.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes", Justification = "This represents the singleton instance relevant to the specified generic implementation")]
-        public static ItemWordMatchEqualityComparer<TItem> Instance
-        {
-            get { return instance; }
-        }
+        public static ItemWordMatchEqualityComparer<TItem> Instance => instance;
 
         /// <summary>
         /// Determines whether the items within two matches are equal.

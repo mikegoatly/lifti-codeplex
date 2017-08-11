@@ -86,13 +86,7 @@ namespace Lifti.Persistence
         /// Gets the number of items stored in the persisted backing store.
         /// </summary>
         /// <value>The number of items stored in the index.</value>
-        public int ItemCount
-        {
-            get
-            {
-                return this.itemLookup.Count;
-            }
-        }
+        public int ItemCount => this.itemLookup.Count;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

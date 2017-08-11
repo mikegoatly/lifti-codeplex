@@ -53,13 +53,7 @@ namespace Lifti
         /// <summary>
         /// Gets a value indicating whether this node is a direct match for items.
         /// </summary>
-        public bool ContainsDirectItems
-        {
-            get
-            {
-                return this.Items != null && this.Items.Count > 0;
-            }
-        }
+        public bool ContainsDirectItems => this.Items != null && this.Items.Count > 0;
 
         /// <summary>
         /// Gets or sets the child nodes under this one, indexed by the next character in the word.

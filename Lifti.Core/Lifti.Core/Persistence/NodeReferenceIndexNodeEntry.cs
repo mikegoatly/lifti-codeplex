@@ -30,10 +30,7 @@ namespace Lifti.Persistence
         /// Gets the type of the entry.
         /// </summary>
         /// <value>The type of the entry.</value>
-        public override IndexNodeEntryType EntryType
-        {
-            get { return IndexNodeEntryType.NodeReference; }
-        }
+        public override IndexNodeEntryType EntryType => IndexNodeEntryType.NodeReference;
 
         /// <summary>
         /// Gets the matched character that connects this index node and the next.

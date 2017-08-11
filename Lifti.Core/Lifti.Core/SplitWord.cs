@@ -45,10 +45,7 @@ namespace Lifti
         /// Gets the split word.
         /// </summary>
         /// <value>The split word.</value>
-        public string Word
-        {
-            get { return this.word; }
-        }
+        public string Word => this.word;
 
         /// <summary>
         /// Gets the index location(s) the word appeared at in the text..

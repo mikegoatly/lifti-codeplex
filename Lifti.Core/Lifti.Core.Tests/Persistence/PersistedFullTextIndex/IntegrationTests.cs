@@ -84,17 +84,20 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
                 this.sut.Index(page.Key, page.Value);
             }
 
-            this.sut.Count.ShouldEqual(200);
+            this.stream.Position = 0L;
+            var index = new PersistedFullTextIndex<string>(this.stream);
+            
+            index.Count.ShouldEqual(200);
 
             // Read different parts of the index from 5 threads
             var barrier = new Barrier(5);
 
             await Task.WhenAll(
-                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("A").Count().ShouldEqual(200); }),
-                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("B").Count().ShouldEqual(200); }),
-                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("C").Count().ShouldEqual(200); }),
-                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("D").Count().ShouldEqual(200); }),
-                Task.Run(() => { barrier.SignalAndWait(); this.sut.Search("Z").Count().ShouldEqual(61); }));
+                Task.Run(() => { barrier.SignalAndWait(); index.Search("A").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); index.Search("B").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); index.Search("C").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); index.Search("D").Count().ShouldEqual(200); }),
+                Task.Run(() => { barrier.SignalAndWait(); index.Search("Z").Count().ShouldEqual(61); }));
         }
 
         /// <summary>
