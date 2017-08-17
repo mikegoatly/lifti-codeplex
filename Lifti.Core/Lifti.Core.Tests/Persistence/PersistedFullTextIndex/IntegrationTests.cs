@@ -22,14 +22,25 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
     [TestFixture]
     public class IntegrationTests
     {
-        private MemoryStream stream;
+        private FileStream stream;
         private PersistedFullTextIndex<string> sut;
+
+        private FileInfo file;
 
         [SetUp]
         public void SetUp()
         {
-            this.stream = new MemoryStream();
+            this.file = new FileInfo("testindex.dat");
+            this.stream = this.file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
             this.sut = new PersistedFullTextIndex<string>(this.stream);
+        }
+
+        [TearDown]
+        public void CleanUp()
+        {
+            this.sut.Dispose();
+            this.stream.Dispose();
+            this.file.Delete();
         }
 
         /// <summary>

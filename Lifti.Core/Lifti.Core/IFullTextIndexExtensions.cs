@@ -117,9 +117,12 @@ namespace Lifti
             }
 
             // Recurse down the child nodes and yield any words returned therein.
-            foreach (var childWord in node.GetChildNodes().SelectMany(n => EnumerateWordsFromNode(builder, n)))
+            foreach (var n in node.GetChildNodes())
             {
-                yield return childWord;
+                foreach (var childWord in EnumerateWordsFromNode(builder, n))
+                {
+                    yield return childWord;
+                }
             }
 
             if (!node.IsRootNode())
