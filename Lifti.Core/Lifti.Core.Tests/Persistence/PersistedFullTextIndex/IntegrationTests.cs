@@ -32,6 +32,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         {
             this.file = new FileInfo("testindex.dat");
             this.stream = this.file.Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            this.stream.SetLength(0L);
             this.sut = new PersistedFullTextIndex<string>(this.stream);
         }
 
