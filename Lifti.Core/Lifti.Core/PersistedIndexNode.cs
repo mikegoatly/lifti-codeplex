@@ -57,18 +57,13 @@ namespace Lifti
         /// </summary>
         /// <value>The child nodes.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "This needs to be settable by deriving classes to support lazy loading")]
-        protected sealed override Dictionary<char, IndexNode<TKey>> ChildNodes
+        public override IEnumerable<IndexNode<TKey>> ChildNodes
         {
             get
             {
                 this.LazyLoadIfRequired();
 
                 return base.ChildNodes;
-            }
-
-            set
-            {
-                base.ChildNodes = value;
             }
         }
 
@@ -77,7 +72,7 @@ namespace Lifti
         /// </summary>
         /// <value>The list of items.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "This needs to be settable by deriving classes to support lazy loading")]
-        protected sealed override Dictionary<TKey, ItemWordMatch<TKey>> Items
+        protected override Dictionary<TKey, ItemWordMatch<TKey>> Items
         {
             get
             {
@@ -92,11 +87,8 @@ namespace Lifti
             }
         }
 
-        /// <summary>
-        /// Invalidates this instance, causing the node's data to be loaded from the persisted backing store
-        /// when it is next accessed.
-        /// </summary>
-        public void Invalidate()
+        /// <inheritdoc />
+        public override void Clear()
         {
             lock (this.syncObj)
             {
@@ -104,26 +96,59 @@ namespace Lifti
                 {
                     this.Index.Extensibility.OnNodeInvalidating(this);
 
-                    if (this.ChildNodes != null)
-                    {
-                        foreach (var node in this.ChildNodes.Values.Cast<PersistedIndexNode<TKey>>())
-                        {
-                            node.Invalidate();
-                        }
-
-                        this.ChildNodes.Clear();
-                        this.ChildNodes = null;
-                    }
-
-                    if (this.Items != null)
-                    {
-                        this.Items.Clear();
-                        this.Items = null;
-                    }
+                    base.Clear();
 
                     this.Populated = false;
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override void Remove(char character)
+        {
+            this.LazyLoadIfRequired();
+
+            base.Remove(character);
+        }
+
+        /// <inheritdoc />
+        public override void DeindexItem(TKey item)
+        {
+            this.LazyLoadIfRequired();
+
+            base.DeindexItem(item);
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<ItemWordMatch<TKey>> GetDirectAndChildItems()
+        {
+            this.LazyLoadIfRequired();
+
+            return base.GetDirectAndChildItems();
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<ItemWordMatch<TKey>> GetDirectItems()
+        {
+            this.LazyLoadIfRequired();
+
+            return base.GetDirectItems();
+        }
+
+        /// <inheritdoc />
+        public override IndexNode<TKey> IndexItem(TKey item, string word, int[] locations)
+        {
+            this.LazyLoadIfRequired();
+
+            return base.IndexItem(item, word, locations);
+        }
+
+        /// <inheritdoc />
+        public override IndexNode<TKey> Match(char letter)
+        {
+            this.LazyLoadIfRequired();
+
+            return base.Match(letter);
         }
 
         /// <summary>
@@ -176,9 +201,8 @@ namespace Lifti
                 foreach (var childNode in childNodes.Values)
                 {
                     childNode.Parent = this;
+                    this.AddNewChildNode(childNode);
                 }
-                     
-                this.ChildNodes = childNodes;
             }
         }
 

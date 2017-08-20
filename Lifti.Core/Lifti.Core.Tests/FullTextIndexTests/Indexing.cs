@@ -26,7 +26,7 @@ namespace Lifti.Tests.FullTextIndexTests
             var node = index.RootNode;
             for (var i = 0; i < 4; i++)
             {
-                node = node.GetChildNodes().FirstOrDefault();
+                node = node.ChildNodes.FirstOrDefault();
                 Assert.IsNotNull(node);
                 Assert.IsFalse(node.IsRootNode());
             }

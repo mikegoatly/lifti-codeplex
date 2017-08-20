@@ -36,8 +36,8 @@
             entryManager.Setup(m => m.GetIndexNodeEntries(3)).Returns(new[] { new NodeReferenceIndexNodeEntry(3, 9, 'N') });
             entryManager.Setup(m => m.GetIndexNodeEntries(9)).Returns(new[] { new NodeReferenceIndexNodeEntry(9, 12, 'E') });
 
-            // Invalidate the node 
-            ((PersistedIndexNode<string>)index.RootNode).Invalidate();
+            // Clear the node 
+            ((PersistedIndexNode<string>)index.RootNode).Clear();
 
             // Navigate the nodes - this will cause it to reload its child entries
             index.RootNode.GetDirectAndChildItems().ToArray();

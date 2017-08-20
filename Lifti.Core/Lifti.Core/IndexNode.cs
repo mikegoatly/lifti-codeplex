@@ -13,6 +13,9 @@ namespace Lifti
 
     public class IndexNode<TKey>
     {
+        private IndexNode<TKey> singleChild;
+        private Dictionary<char, IndexNode<TKey>> childNodes;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IndexNode{TKey}"/> class.
         /// </summary>
@@ -58,14 +61,26 @@ namespace Lifti
         public bool ContainsDirectItems => this.Items != null && this.Items.Count > 0;
 
         /// <summary>
-        /// Gets or sets the child nodes under this one, indexed by the next character in the word.
+        /// Gets or sets the child nodes under this one.
         /// </summary>
         /// <value>The child nodes.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly", Justification = "This needs to be settable by deriving classes to support lazy loading")]
-        protected virtual Dictionary<char, IndexNode<TKey>> ChildNodes
+
+        public virtual IEnumerable<IndexNode<TKey>> ChildNodes
         {
-            get;
-            set;
+            get
+            {
+                if (this.singleChild != null)
+                {
+                    yield return this.singleChild;
+                }
+                else if (this.childNodes != null)
+                {
+                    foreach (var child in this.childNodes.Values)
+                    {
+                        yield return child;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -83,7 +98,7 @@ namespace Lifti
         /// De-indexes the given item from this node.
         /// </summary>
         /// <param name="item">The item to de-index.</param>
-        public void DeindexItem(TKey item)
+        public virtual void DeindexItem(TKey item)
         {
             if (this.Items.Remove(item))
             {
@@ -98,7 +113,7 @@ namespace Lifti
         /// </summary>
         /// <returns>The distinct list of items.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not just a simple property")]
-        public IEnumerable<ItemWordMatch<TKey>> GetDirectAndChildItems()
+        public virtual IEnumerable<ItemWordMatch<TKey>> GetDirectAndChildItems()
         {
             return this.GetDirectAndChildItemsUnfiltered().Distinct();
         }
@@ -108,7 +123,7 @@ namespace Lifti
         /// </summary>
         /// <returns>The distinct list of items.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is not just a simple property")]
-        public IEnumerable<ItemWordMatch<TKey>> GetDirectItems()
+        public virtual IEnumerable<ItemWordMatch<TKey>> GetDirectItems()
         {
             return this.ContainsDirectItems ? this.Items.Values : Enumerable.Empty<ItemWordMatch<TKey>>();
         }
@@ -120,7 +135,7 @@ namespace Lifti
         /// <param name="word">The word the item is being indexed against.</param>
         /// <param name="locations">The locations the word was indexed at for the item's text.</param>
         /// <returns>The node at the end of the indexed word.</returns>
-        public IndexNode<TKey> IndexItem(TKey item, string word, int[] locations)
+        public virtual IndexNode<TKey> IndexItem(TKey item, string word, int[] locations)
         {
             return this.IndexItemCharacter(new ItemWordMatch<TKey>(item, locations), word, 0);
         }
@@ -130,25 +145,79 @@ namespace Lifti
         /// </summary>
         /// <param name="letter">The letter to match.</param>
         /// <returns>The matching child node, or null if the given letter does not match any child node.</returns>
-        public IndexNode<TKey> Match(char letter)
+        public virtual IndexNode<TKey> Match(char letter)
         {
             IndexNode<TKey> childNode = null;
 
-            if (this.ChildNodes != null)
+            if (this.singleChild != null)
             {
-                this.ChildNodes.TryGetValue(letter, out childNode);
+                if (letter == this.singleChild.IndexedCharacter)
+                {
+                    childNode = this.singleChild;
+                }
+            }
+            else if (this.childNodes != null)
+            {
+                this.childNodes.TryGetValue(letter, out childNode);
             }
 
             return childNode;
         }
 
+        ///// <summary>
+        ///// Gets the child nodes associated to this item.
+        ///// </summary>
+        ///// <returns>The child nodes contained under this node.</returns>
+        //internal IEnumerable<IndexNode<TKey>> GetChildNodes()
+        //{
+        //    return this.ChildNodes == null ? Enumerable.Empty<IndexNode<TKey>>() : this.ChildNodes.Values;
+        //}
+
         /// <summary>
-        /// Gets the child nodes associated to this item.
+        /// Removes reference to the given character from this index node. Does not throw an exception if it doesn't exist.
         /// </summary>
-        /// <returns>The child nodes contained under this node.</returns>
-        internal IEnumerable<IndexNode<TKey>> GetChildNodes()
+        /// <param name="character">The character to remove.</param>
+        public virtual void Remove(char character)
         {
-            return this.ChildNodes == null ? Enumerable.Empty<IndexNode<TKey>>() : this.ChildNodes.Values;
+            if (this.singleChild != null)
+            {
+                if (this.singleChild.IndexedCharacter == character)
+                {
+                    this.singleChild = null;
+                }
+            }
+            else
+            {
+                this.childNodes?.Remove(character);
+            }
+        }
+
+        /// <summary>
+        /// Clears this instance, removing any direcly indexed items and recursively clearing any of its children.
+        /// </summary>
+        public virtual void Clear()
+        {
+            if (this.singleChild != null)
+            {
+                this.singleChild.Clear();
+                this.singleChild = null;
+            }
+            else if (this.childNodes != null)
+            {
+                foreach (var node in this.ChildNodes)
+                {
+                    node.Clear();
+                }
+
+                this.childNodes.Clear();
+                this.childNodes = null;
+            }
+
+            if (this.Items != null)
+            {
+                this.Items.Clear();
+                this.Items = null;
+            }
         }
 
         /// <summary>
@@ -166,16 +235,14 @@ namespace Lifti
                 }
             }
 
-            if (this.ChildNodes != null)
-            {
-                var childItems = from c in this.ChildNodes.Values
-                                 from i in c.GetDirectAndChildItemsUnfiltered()
-                                 select i;
+            // TODO unwrap this linq - use hashset
+            var childItems = from c in this.ChildNodes
+                             from i in c.GetDirectAndChildItemsUnfiltered()
+                             select i;
 
-                foreach (var item in childItems.Distinct())
-                {
-                    yield return item;
-                }
+            foreach (var item in childItems.Distinct())
+            {
+                yield return item;
             }
         }
 
@@ -209,15 +276,10 @@ namespace Lifti
         /// <returns>The child node.</returns>
         private IndexNode<TKey> GetOrCreateChildNode(char character)
         {
-            if (this.ChildNodes == null)
-            {
-                this.ChildNodes = new Dictionary<char, IndexNode<TKey>>();
-            }
-
-            IndexNode<TKey> childNode;
+            var childNode = this.Match(character);
 
             // Check if there is already a child node for the next character
-            if (!this.ChildNodes.TryGetValue(character, out childNode))
+            if (childNode == null)
             {
                 // Create a new child node for the next character of the word
                 childNode = this.Index.CreateIndexNode(character);
@@ -225,7 +287,7 @@ namespace Lifti
 
                 this.Index.Extensibility.OnNodeCreated(childNode);
 
-                this.ChildNodes.Add(character, childNode);
+                this.AddNewChildNode(childNode);
             }
 
             return childNode;
@@ -260,17 +322,45 @@ namespace Lifti
                 return;
             }
 
-            if (!this.ContainsDirectItems && (this.ChildNodes == null || this.ChildNodes.Count == 0))
+            if (!this.ContainsDirectItems && this.singleChild == null && (this.childNodes == null || this.childNodes.Count == 0))
             {
                 this.Index.Extensibility.OnNodeRemoved(this);
 
-                this.Parent.ChildNodes.Remove(this.IndexedCharacter);
+                this.Parent.Remove(this.IndexedCharacter);
                 this.Parent.CompactIndex();
 
                 // Null out the references to help the GC
                 this.Items = null;
-                this.ChildNodes = null;
+                this.childNodes = null;
                 this.Parent = null;
+            }
+        }
+
+        /// <summary>
+        /// Adds the given child node to this instance.
+        /// </summary>
+        /// <param name="childNode">
+        /// The node to add.
+        /// </param>
+        protected void AddNewChildNode(IndexNode<TKey> childNode)
+        {
+            if (this.singleChild == null && this.childNodes == null)
+            {
+                this.singleChild = childNode;
+            }
+            else if (this.singleChild != null)
+            {
+                this.childNodes = new Dictionary<char, IndexNode<TKey>>
+                                  {
+                                      { this.singleChild.IndexedCharacter, this.singleChild },
+                                      { childNode.IndexedCharacter, childNode }
+                                  };
+
+                this.singleChild = null;
+            }
+            else
+            {
+                this.childNodes.Add(childNode.IndexedCharacter, childNode);
             }
         }
     }
