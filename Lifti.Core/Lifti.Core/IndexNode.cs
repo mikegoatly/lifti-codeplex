@@ -40,7 +40,8 @@ namespace Lifti
         /// <value>The indexed character.</value>
         public char IndexedCharacter
         {
-            get; }
+            get;
+        }
 
         /// <summary>
         /// Gets the index this node is a part of.
@@ -48,7 +49,8 @@ namespace Lifti
         /// <value>The associated <see cref="IFullTextIndex{TKey}"/></value>
         public IFullTextIndex<TKey> Index
         {
-            get; }
+            get;
+        }
 
         /// <summary>
         /// Gets a value indicating whether this node is a direct match for items.

@@ -29,41 +29,16 @@ namespace Lifti.Persistence
         /// <param name="extensibilityService">The extensibility service.</param>
         public PageManager(IPageCache pageCache, IPersistenceSettings settings, IDataFileManager dataFileManager, ITypePersistence<TItem> typePersistence, IIndexExtensibilityService<TItem> extensibilityService)
         {
-            if (pageCache == null)
-            {
-                throw new ArgumentNullException(nameof(pageCache));
-            }
-
-            if (typePersistence == null)
-            {
-                throw new ArgumentNullException(nameof(typePersistence));
-            }
-
-            if (dataFileManager == null)
-            {
-                throw new ArgumentNullException(nameof(dataFileManager));
-            }
-
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
-
-            if (extensibilityService == null)
-            {
-                throw new ArgumentNullException(nameof(extensibilityService));
-            }
-
-            this.ExtensibilityService = extensibilityService;
-            this.PageCache = pageCache;
+            this.ExtensibilityService = extensibilityService ?? throw new ArgumentNullException(nameof(extensibilityService));
+            this.PageCache = pageCache ?? throw new ArgumentNullException(nameof(pageCache));
             this.ItemDataPages = new DataPageCollection();
             this.IndexNodeDataPages = new DataPageCollection();
             this.ItemNodeIndexDataPages = new DataPageCollection();
             this.availablePages = new Queue<int>();
 
-            this.settings = settings;
-            this.typePersistence = typePersistence;
-            this.FileManager = dataFileManager;
+            this.settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            this.typePersistence = typePersistence ?? throw new ArgumentNullException(nameof(typePersistence));
+            this.FileManager = dataFileManager ?? throw new ArgumentNullException(nameof(dataFileManager));
         }
 
         /// <summary>
