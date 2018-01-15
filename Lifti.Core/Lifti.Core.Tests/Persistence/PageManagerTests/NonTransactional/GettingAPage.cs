@@ -8,20 +8,20 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
     using Lifti.Persistence;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for getting pages from the page manager.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class GettingAPage : PageManagerTestBase
     {
         /// <summary>
         /// Tests that an item data page is successfully fetched.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnItemDataPageWhenRequested()
         {
             // Setup
@@ -38,7 +38,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
             var page = pageManager.GetPage(1);
 
             // Verify
-            Assert.IsInstanceOfType(page, typeof(ItemIndexDataPage<int>));
+            Assert.IsInstanceOf<ItemIndexDataPage<int>>(page);
             var dataPage = (ItemIndexDataPage<int>)page;
 
             Assert.AreEqual(3, dataPage.Entries.Count());
@@ -52,7 +52,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// Tests that an index node data page is successfully fetched.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnIndexNodeDataPageWhenRequested()
         {
             // Setup
@@ -69,7 +69,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
             var page = pageManager.GetPage(0);
 
             // Verify
-            Assert.IsInstanceOfType(page, typeof(IndexNodeDataPage));
+            Assert.IsInstanceOf<IndexNodeDataPage>(page);
             var dataPage = (IndexNodeDataPage)page;
 
             Assert.AreEqual(6, dataPage.Entries.Count());

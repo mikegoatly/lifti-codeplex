@@ -95,18 +95,12 @@ namespace Lifti.Querying.Tokenization
         /// Gets the token text.
         /// </summary>
         /// <value>The token text.</value>
-        public string TokenText
-        {
-            get { return this.tokenText; }
-        }
+        public string TokenText => this.tokenText;
 
         /// <summary>
         /// Gets the type of the token.
         /// </summary>
         /// <value>The type of the token.</value>
-        public QueryTokenType TokenType
-        {
-            get { return this.tokenType; }
-        }
+        public QueryTokenType TokenType => this.tokenType;
     }
 }

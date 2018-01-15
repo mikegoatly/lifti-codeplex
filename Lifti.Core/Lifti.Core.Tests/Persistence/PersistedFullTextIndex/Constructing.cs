@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
     using Lifti.Extensibility;
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the construction of the persisted full text index.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Constructing
     {
         /// <summary>
         /// Tests the loading of a full text index from an empty file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void FromEmptyFile()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);
@@ -42,7 +42,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// The persisted full text index should report the correct number of items, even though it
         /// is being lazy-loaded.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReportCorrectNumberOfItemsInIndex()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);

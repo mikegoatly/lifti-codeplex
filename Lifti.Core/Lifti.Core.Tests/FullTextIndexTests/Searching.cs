@@ -5,18 +5,18 @@ namespace Lifti.Tests.FullTextIndexTests
 {
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests the searching of the <see cref="FullTextIndex{TKey}"/>.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Searching : FullTextIndexTestBase
     {
         /// <summary>
         /// Tests that it's possible to index and search for a word with.an umlaut in.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldBePossibleToSearchForItemWithUmlaut()
         {
             using (var index = new FullTextIndex<string>())
@@ -29,7 +29,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests the case where the full text index is empty.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void EmptyIndexSearch()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -39,7 +39,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests the matching of one item with one search word.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestMatchingOneItemOneSearchWord()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -57,7 +57,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests the indexer with multiple search words.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestMultipleSearchWords()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -78,7 +78,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests the matching of a word that's cased differently from the indexed word.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCaseInsensitivityMatching()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -94,7 +94,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests the case where an apostrophe is searched for, or in the original text.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestApostropheMatching()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -113,7 +113,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests the case where the search words are only part of the words in the indexed text.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPartialMatching()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -132,7 +132,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests searching with empty text.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSearchingOnEmptyText()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -149,7 +149,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests searching on text whose words are separated with punctuation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPunctuationWordBreaks()
         {
             var indexer = CreateCustomerFullTextIndexer();
@@ -165,7 +165,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// Tests that symbols don't affect search words.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSymbolHandling()
         {
             var indexer = CreateCustomerFullTextIndexer();

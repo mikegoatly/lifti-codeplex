@@ -6,28 +6,28 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
     using System.Collections.Generic;
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for removing items from an <see cref="UpdatableFullTextIndex{TKey}"/>.
     /// </summary>
-    [TestClass]
-    public class Removing : UnitTestBase
+    [TestFixture]
+    public class Removing
     {
         /// <summary>
         /// Removing a null list of items should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingNullListOfItemsShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<Customer>();
-            AssertRaisesArgumentNullException(() => index.Remove((IEnumerable<Customer>)null), "itemKeys");
+            this.AssertRaisesArgumentNullException(() => index.Remove((IEnumerable<Customer>)null), "itemKeys");
         }
 
         /// <summary>
         /// Tests that removing the only item in the index results in empty root node.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingTheOnlyItemInTheIndexShouldResultInEmptyIndex()
         {
             var item = new Customer { Name = "Test", Biography = "Test Testing" };
@@ -49,7 +49,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// <summary>
         /// Tests that removing the only items in the index results in empty root node.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingTheOnlyItemsInTheIndexShouldResultInEmptyIndex()
         {
             var item1 = new Customer { Name = "Test1", Biography = "Test Testing" };
@@ -76,7 +76,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// Tests that indexing two items with the same words and removing one of them leaves the index
         /// still able to return the first.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingTwoItemsWithSameWordsAndRemovingOneShouldNotAffectTheOther()
         {
             var item1 = new Customer { Name = "Test1", Biography = "Test Testing" };
@@ -102,7 +102,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// Tests that removing a longer word from the index doesn't affect any shorter
         /// versions of the word.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingWordThatIsLongerThanAnotherWordShouldNotAffectTheShorter()
         {
             var item1 = new Customer { Name = "Test1", Biography = "Testing" };
@@ -128,7 +128,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// Tests that removing an item that has not been indexed does not cause any exceptions to
         /// be thrown and leaves the index unchanged.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingUnknownItemShouldNotRaiseException()
         {
             var item1 = new Customer { Name = "Test1", Biography = "Test" };

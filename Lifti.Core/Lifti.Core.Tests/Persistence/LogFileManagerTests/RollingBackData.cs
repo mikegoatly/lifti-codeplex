@@ -3,65 +3,106 @@
 
 namespace Lifti.Tests.Persistence.LogFileManagerTests
 {
+    #region Using statements
+
     using System;
-    using System.IO;
     using System.Linq;
 
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
-    using Lifti.Tests.Persistence.DataFileManagerTests;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using NUnit.Framework;
+
+    #endregion
 
     /// <summary>
     /// Tests for rolling data back to the data store from a log file.
     /// </summary>
-    [TestClass]
-    public class RollingBackData : UnitTestBase
+    [TestFixture]
+    public class RollingBackData : LogFileManagerTest
     {
         /// <summary>
-        /// The path to the test file.
+        /// Any data after an end of log marker should be ignored.
         /// </summary>
-        private string path;
+        [Test]
+        public void ShouldNotProcessDataAfterAnEndOfLogMarker()
+        {
+            var fileData = Data.LogFileHeader(TransactionLogState.TransactionLogged, 233)
+                    .Then((byte)LogEntryDataType.EndOfLog)
+                    .Then((byte)99)
+                    .ToArray();
+
+            this.SetInitialData(fileData);
+
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+
+            this.Sut.RollbackDataTo(dataFile.Object);
+        }
 
         /// <summary>
-        /// Cleans up before and after each test.
+        /// If the log state is Committed then an exception should be thrown if an attempt to rollback is made.
         /// </summary>
-        [TestCleanup]
-        [TestInitialize]
-        public void TestCleanup()
+        [Test]
+        public void ShouldThrowExceptionIfLogIsCommitted()
         {
-            this.path = $"testindex{Guid.NewGuid()}.dat";
+            var fileData = Data.LogFileHeader(TransactionLogState.TransactionCommitted, 233)
+                    .ToArray();
 
-            if (File.Exists(this.path))
-            {
-                File.Delete(this.path);
-            }
+            this.SetInitialData(fileData);
 
-            if (File.Exists(this.path + ".txlog"))
-            {
-                File.Delete(this.path + ".txlog");
-            }
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+
+            Assert.Throws<PersistenceException>(() => this.Sut.RollbackDataTo(dataFile.Object), "Transaction log in an invalid state to rollback data - current state: TransactionCommitted");
+        }
+
+        /// <summary>
+        /// If the log state is None then an exception should be thrown if an attempt to rollback is made.
+        /// </summary>
+        [Test]
+        public void ShouldThrowExceptionIfLogIsNotOpen()
+        {
+            var fileData = Data.LogFileHeader(TransactionLogState.None, 233)
+                    .ToArray();
+
+            this.SetInitialData(fileData);
+
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+
+            Assert.Throws<PersistenceException>(() => this.Sut.RollbackDataTo(dataFile.Object), "Transaction log in an invalid state to rollback data - current state: None");
         }
 
         /// <summary>
         /// If a null data file manager is provided, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfNullDataFileManagerProvided()
         {
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                AssertRaisesArgumentNullException(() => logFileManager.RollbackDataTo(null), "dataFileManager");
-            }
+            Assert.Throws<ArgumentNullException>(() => this.Sut.RollbackDataTo(null), "Value cannot be null.\r\nParameter name: dataFileManager");
+        }
+
+        /// <summary>
+        /// If unexpected log entry type is encountered then an exception should be raised.
+        /// </summary>
+        [Test]
+        public void ShouldThrowExceptionIfUnexpectedLogEntryIsEncountered()
+        {
+            var fileData = Data.LogFileHeader(TransactionLogState.TransactionLogged, 233)
+                    .Then((byte)99)
+                    .ToArray();
+
+            this.SetInitialData(fileData);
+
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+
+            Assert.Throws<PersistenceException>(() => this.Sut.RollbackDataTo(dataFile.Object), "Unexpected log entry in log file - the log file is possibly corrupted");
         }
 
         /// <summary>
         /// The state of the log file should be written to the log file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldWriteStateToLogFile()
         {
             var fileData = Data.LogFileHeader(TransactionLogState.Incomplete, 233)
@@ -74,7 +115,7 @@ namespace Lifti.Tests.Persistence.LogFileManagerTests
                 .Then((byte)LogEntryDataType.EndOfLog)
                 .ToArray();
 
-            FileHelper.CreateFile(this.path, fileData);
+            this.SetInitialData(fileData);
 
             var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
 
@@ -82,89 +123,9 @@ namespace Lifti.Tests.Persistence.LogFileManagerTests
             dataFile.Setup(d => d.WriteRaw(3, It.Is<byte[]>(b => b.SequenceEqual(new byte[] { 4, 5 })), 2));
             dataFile.Setup(d => d.WriteRaw(5, It.Is<byte[]>(b => b.SequenceEqual(new byte[] { 6, 7, 8, 9 })), 4));
 
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.RollbackDataTo(dataFile.Object);
-            }
+            this.Sut.RollbackDataTo(dataFile.Object);
 
             dataFile.VerifyAll();
-        }
-
-        /// <summary>
-        /// If the log state is None then an exception should be thrown if an attempt to rollback is made.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsNotOpen()
-        {
-            var fileData = Data.LogFileHeader(TransactionLogState.None, 233)
-                    .ToArray();
-
-            FileHelper.CreateFile(this.path, fileData);
-
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                AssertRaisesException<PersistenceException>(() => logFileManager.RollbackDataTo(dataFile.Object), "Transaction log in an invalid state to rollback data - current state: None");
-            }
-        }
-
-        /// <summary>
-        /// If the log state is Committed then an exception should be thrown if an attempt to rollback is made.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsCommitted()
-        {
-            var fileData = Data.LogFileHeader(TransactionLogState.TransactionCommitted, 233)
-                    .ToArray();
-            FileHelper.CreateFile(this.path, fileData);
-
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                AssertRaisesException<PersistenceException>(() => logFileManager.RollbackDataTo(dataFile.Object), "Transaction log in an invalid state to rollback data - current state: TransactionCommitted");
-            }
-        }
-
-        /// <summary>
-        /// If unexpected log entry type is encountered then an exception should be raised.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfUnexpectedLogEntryIsEncountered()
-        {
-            var fileData = Data.LogFileHeader(TransactionLogState.TransactionLogged, 233)
-                    .Then((byte)99)
-                    .ToArray();
-            FileHelper.CreateFile(this.path, fileData);
-
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                AssertRaisesException<PersistenceException>(() => logFileManager.RollbackDataTo(dataFile.Object), "Unexpected log entry in log file - the log file is possibly corrupted");
-            }
-        }
-
-        /// <summary>
-        /// Any data after an end of log marker should be ignored.
-        /// </summary>
-        [TestMethod]
-        public void ShouldNotProcessDataAfterAnEndOfLogMarker()
-        {
-            var fileData = Data.LogFileHeader(TransactionLogState.TransactionLogged, 233)
-                    .Then((byte)LogEntryDataType.EndOfLog)
-                    .Then((byte)99)
-                    .ToArray();
-
-            FileHelper.CreateFile(this.path, fileData);
-
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.RollbackDataTo(dataFile.Object);
-            }
         }
     }
 }

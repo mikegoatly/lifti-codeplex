@@ -5,18 +5,18 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the FindClosestPageForEntry method of the DataPageCollection.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class FindingClosestPageForId
     {
         /// <summary>
         /// When the collection is empty, requesting the closest page to any id should return null.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnNullIfCollectionIsEmpty()
         {
             var col = new DataPageCollection();
@@ -28,7 +28,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// When the collection has only one page, it will always be returned regardless of the
         /// requested id.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldAlwaysReturnPageIfCollectionHasOnlyOnePage()
         {
             var headers = new[] { new DataPageHeader(DataPageType.Items, 0, null, null, 4, 1, 3, 30) };
@@ -44,7 +44,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// If the requested ID falls between two pages, then the first one should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnFirstPageIfRequestedIdFallsBetweenTwoPages()
         {
             var headers = new[] 

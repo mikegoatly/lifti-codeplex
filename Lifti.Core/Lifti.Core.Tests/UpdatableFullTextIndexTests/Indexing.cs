@@ -6,88 +6,88 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
     using System.Collections.Generic;
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests the indexing of items from the <see cref="FullTextIndex{TKey}"/>.
     /// </summary>
-    [TestClass]
-    public class Indexing : UnitTestBase
+    [TestFixture]
+    public class Indexing
     {
         /// <summary>
         /// Indexing a null list of items should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingNullListOfItemsShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<Customer>();
-            AssertRaisesArgumentNullException(() => index.Index(null, c => c.Biography), "itemKeys");
+            this.AssertRaisesArgumentNullException(() => index.Index(null, c => c.Biography), "itemKeys");
         }
 
         /// <summary>
         /// Indexing an item against null text should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingWithNullTextShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<string>();
-            AssertRaisesArgumentNullException(() => index.Index("test", (string)null), "text");
+            this.AssertRaisesArgumentNullException(() => index.Index("test", (string)null), "text");
         }
 
         /// <summary>
         /// Indexing an item against a null text reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemWithNullTextReaderShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<string>();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer(), c => c.Name, null), "readText");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer(), c => c.Name, null), "readText");
         }
 
         /// <summary>
         /// Indexing an item against a null key reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemWithNullKeyReaderShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<string>();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer(), null, c => c.Biography), "readKey");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer(), null, c => c.Biography), "readKey");
         }
 
         /// <summary>
         /// Indexing a list of items against a null text reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemsWithNullTextReaderShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<string>();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer[0], c => c.Name, null), "readText");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer[0], c => c.Name, null), "readText");
         }
 
         /// <summary>
         /// Indexing a list of items against a null key reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemsWithNullKeyReaderShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<string>();
-            AssertRaisesArgumentNullException(() => index.Index(new Customer[0], null, c => c.Biography), "readKey");
+            this.AssertRaisesArgumentNullException(() => index.Index(new Customer[0], null, c => c.Biography), "readKey");
         }
 
         /// <summary>
         /// Indexing a list of items against a null key reader should raise an argument null exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingItemsWithNullItemListShouldRaiseException()
         {
             var index = new UpdatableFullTextIndex<string>();
-            AssertRaisesArgumentNullException(() => index.Index((IEnumerable<Customer>)null, c => c.Name, c => c.Biography), "items");
+            this.AssertRaisesArgumentNullException(() => index.Index((IEnumerable<Customer>)null, c => c.Name, c => c.Biography), "items");
         }
 
         /// <summary>
         /// Indexing a list of items should cause all provided items to be stored in the index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingListOfArbitraryItems()
         {
             var index = new UpdatableFullTextIndex<string>();
@@ -102,7 +102,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// <summary>
         /// Indexing a single item should cause it to be stored in the index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingSingleArbitraryItem()
         {
             var index = new UpdatableFullTextIndex<string>();
@@ -118,7 +118,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// <summary>
         /// Indexing multiple keys should cause each to be stored in the index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingMultipleKeys()
         {
             var index = new UpdatableFullTextIndex<string>();
@@ -135,7 +135,7 @@ namespace Lifti.Tests.UpdatableFullTextIndexTests
         /// <summary>
         /// Indexing a single key should cause it to be stored in the index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void IndexingSingleKey()
         {
             var index = new UpdatableFullTextIndex<string>();

@@ -59,10 +59,7 @@ namespace Lifti.Persistence
         /// Gets the entries in the data page.
         /// </summary>
         /// <value>The data page entries.</value>
-        public IEnumerable<TEntry> Entries
-        {
-            get { return this.entries; }
-        }
+        public IEnumerable<TEntry> Entries => this.entries;
 
         /// <summary>
         /// Determines whether this instance can contain the specified entry.

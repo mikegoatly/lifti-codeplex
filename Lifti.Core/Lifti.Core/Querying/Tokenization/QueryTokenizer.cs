@@ -8,8 +8,6 @@ namespace Lifti.Querying.Tokenization
     using System.Globalization;
     using System.Text;
 
-    using Lifti.Properties;
-
     /// <summary>
     /// A tokenizer class capable of breaking a LIFTI query string down into its constituent tokens.
     /// </summary>
@@ -146,7 +144,7 @@ namespace Lifti.Querying.Tokenization
                     return QueryTokenType.NearOperator;
 
                 default:
-                    throw new QueryParserException(string.Format(CultureInfo.CurrentCulture, Resources.UnknownOperator, text));
+                    throw new QueryParserException(string.Format(CultureInfo.CurrentCulture, ResourceString.UnknownOperator, text));
             }
         }
 

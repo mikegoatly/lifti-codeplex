@@ -150,24 +150,12 @@ namespace Lifti.Persistence
         /// <summary>
         /// Gets the page that only had their headers affected during the transaction.
         /// </summary>
-        public IEnumerable<IDataPage> AffectedPageHeaders
-        {
-            get
-            {
-                return this.GetPagesWithWriteFlag(PageWriteLevels.Header);
-            }
-        }
+        public IEnumerable<IDataPage> AffectedPageHeaders => this.GetPagesWithWriteFlag(PageWriteLevels.Header);
 
         /// <summary>
         /// Gets the pages that had their entire contents affected during the transaction.
         /// </summary>
-        public IEnumerable<IDataPage> AffectedPageBodies
-        {
-            get
-            {
-                return this.GetPagesWithWriteFlag(PageWriteLevels.Body);
-            }
-        }
+        public IEnumerable<IDataPage> AffectedPageBodies => this.GetPagesWithWriteFlag(PageWriteLevels.Body);
 
         /// <summary>
         /// Gets the pages that were affected during the transaction in some form or another.
@@ -184,13 +172,7 @@ namespace Lifti.Persistence
         /// Gets the pages that were created during the transaction.
         /// </summary>
         /// <value>The created pages.</value>
-        public IEnumerable<int> CreatedPageNumbers
-        {
-            get
-            {
-                return this.GetPagesNumbersWithWriteFlag(PageWriteLevels.Created);
-            }
-        }
+        public IEnumerable<int> CreatedPageNumbers => this.GetPagesNumbersWithWriteFlag(PageWriteLevels.Created);
 
         /// <summary>
         /// Gets a value indicating whether the transaction log is closed.

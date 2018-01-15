@@ -7,20 +7,20 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for getting all item entries from the <see cref="PersistedEntryManager{TKey}"/> class.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class GettingAllItemEntries : PersistedEntryManagerTestBase
     {
         /// <summary>
         /// If the index contains no items, an empty enumerable should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldNoResultsForEmptyIndex()
         {
             var pageManager = CreateMockedPageManager();
@@ -39,7 +39,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// If the index contains items, they should be returned in the order in which they are stored.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldResultsFromAllPagesInOrder()
         {
             var pageManager = CreateMockedPageManager();

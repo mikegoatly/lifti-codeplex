@@ -7,20 +7,20 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for removing index node entries.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RemovingIndexNodeEntry : PersistedEntryManagerTestBase
     {
         /// <summary>
         /// When removing an index node reference, the entry should be removed from the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveItemReferenceFromPage()
         {
             var pageManager = CreateMockedPageManager();
@@ -55,7 +55,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// When removing an index node reference, the entry should be removed from the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveNodeReferenceFromPage()
         {
             var pageManager = CreateMockedPageManager(); 

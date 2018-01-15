@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.TransactionLogFactoryTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for creating a new <see cref="TransactionLogRollback"/> instance using a <see cref="TransactionLogFactory"/>.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CreatingNewTransactionLogRollback
     {
         /// <summary>
         /// The factory should successfully create a rollback instance..
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCreateRollbackInstance()
         {
             var logFile = new Mock<ILogFileManager>();

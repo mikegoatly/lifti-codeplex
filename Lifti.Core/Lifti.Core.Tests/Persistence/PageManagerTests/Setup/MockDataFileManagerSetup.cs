@@ -10,7 +10,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.Setup
 
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 

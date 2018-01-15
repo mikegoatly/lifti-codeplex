@@ -3,138 +3,101 @@
 
 namespace Lifti.Tests.Persistence.LogFileManagerTests
 {
+    #region Using statements
+
     using System;
-    using System.IO;
-    using System.Linq;
 
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
-    using Lifti.Tests.Persistence.DataFileManagerTests;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using NUnit.Framework;
+
+    using Should;
+
+    #endregion
 
     /// <summary>
     /// Tests the logging data process for the <see cref="LogFileManager"/> class.
     /// </summary>
-    [TestClass]
-    public class LoggingDataFromDataFile : UnitTestBase
+    [TestFixture]
+    public class LoggingDataFromDataFile : LogFileManagerTest
     {
         /// <summary>
-        /// The path to the test file.
+        /// If the log state is Committed then an exception should be thrown if the LogDataFrom method is called.
         /// </summary>
-        private string path;
+        [Test]
+        public void ShouldThrowExceptionIfLogIsCommitted()
+        {
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
+
+            this.Sut.InitializeNewLog(dataFile.Object);
+            this.Sut.LogState = TransactionLogState.TransactionCommitted;
+            Assert.Throws<PersistenceException>(
+                () => this.Sut.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2),
+                "Transaction log in an invalid state to log data - current state: TransactionCommitted");
+        }
 
         /// <summary>
-        /// Cleans up before and after each test.
+        /// If the log state is Logged then an exception should be thrown if the LogDataFrom method is called.
         /// </summary>
-        [TestCleanup]
-        [TestInitialize]
-        public void TestCleanup()
+        [Test]
+        public void ShouldThrowExceptionIfLogIsLogged()
         {
-            this.path = $"testindex{Guid.NewGuid()}.dat";
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
 
-            if (File.Exists(this.path))
-            {
-                File.Delete(this.path);
-            }
+            this.Sut.InitializeNewLog(dataFile.Object);
+            this.Sut.LogState = TransactionLogState.TransactionLogged;
+            Assert.Throws<PersistenceException>(
+                () => this.Sut.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2),
+                "Transaction log in an invalid state to log data - current state: TransactionLogged");
+        }
 
-            if (File.Exists(this.path + ".txlog"))
-            {
-                File.Delete(this.path + ".txlog");
-            }
+        /// <summary>
+        /// If the log state is None then an exception should be thrown if the LogDataFrom method is called.
+        /// </summary>
+        [Test]
+        public void ShouldThrowExceptionIfLogIsNotOpen()
+        {
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+
+            Assert.Throws<PersistenceException>(
+                () => this.Sut.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2),
+                "Transaction log in an invalid state to log data - current state: None");
         }
 
         /// <summary>
         /// If a null data file manager is provided, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfNullDataFileManagerProvided()
         {
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                AssertRaisesArgumentNullException(() => logFileManager.LogDataFrom(LogEntryDataType.FullPage, null, 10, 200), "dataFileManager");
-            }
+            Assert.Throws<ArgumentNullException>(() => this.Sut.LogDataFrom(LogEntryDataType.FullPage, null, 10, 200), "Value cannot be null.\r\nParameter name: dataFileManager");
         }
 
         /// <summary>
         /// When logging data from the data file, an entry type header should additionally be written out.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldWriteOutEntryHeaderAsWellAsData()
         {
             var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
             dataFile.SetupGet(d => d.CurrentLength).Returns(233);
             dataFile.Setup(d => d.ReadRaw(10, It.Is<byte[]>(b => b.Length == 2))).Returns(new byte[] { 56, 22 });
 
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.InitializeNewLog(dataFile.Object);
-                logFileManager.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2);
-            }
+            this.Sut.InitializeNewLog(dataFile.Object);
+            this.Sut.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2);
 
             var expectedData = Data.LogFileHeader(TransactionLogState.Incomplete, 233)
                 .Then(Data.LogEntryHeader(LogEntryDataType.PageHeader, 10, 2))
                 .Then(new byte[] { 56, 22 });
 
-            var actual = FileHelper.GetFileBytes(this.path);
+            var actual = this.Stream.ToArray();
 
-            Assert.IsTrue(expectedData.SequenceEqual(actual));
-        }
-
-        /// <summary>
-        /// If the log state is None then an exception should be thrown if the LogDataFrom method is called.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsNotOpen()
-        {
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                AssertRaisesException<PersistenceException>(
-                    () => logFileManager.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2),
-                    "Transaction log in an invalid state to log data - current state: None");
-            }  
-        }
-
-        /// <summary>
-        /// If the log state is Committed then an exception should be thrown if the LogDataFrom method is called.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsCommitted()
-        {
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.InitializeNewLog(dataFile.Object);
-                logFileManager.LogState = TransactionLogState.TransactionCommitted;
-                AssertRaisesException<PersistenceException>(
-                    () => logFileManager.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2),
-                    "Transaction log in an invalid state to log data - current state: TransactionCommitted");
-            }
-        }
-
-        /// <summary>
-        /// If the log state is Logged then an exception should be thrown if the LogDataFrom method is called.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsLogged()
-        {
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.InitializeNewLog(dataFile.Object);
-                logFileManager.LogState = TransactionLogState.TransactionLogged;
-                AssertRaisesException<PersistenceException>(
-                    () => logFileManager.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2),
-                    "Transaction log in an invalid state to log data - current state: TransactionLogged");
-            }
+            actual.ShouldEqual(expectedData);
         }
     }
 }

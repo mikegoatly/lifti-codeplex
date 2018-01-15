@@ -6,7 +6,7 @@ namespace Lifti.Tests.Persistence.TransactionLogRollbackTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
@@ -14,13 +14,13 @@ namespace Lifti.Tests.Persistence.TransactionLogRollbackTests
     /// Tests for using a <see cref="TransactionLogRollback"/> instance to rollback an existing
     /// logged transaction.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RollingBack
     {
         /// <summary>
         /// If the current transaction log state is None, then rolling back should do nothing.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldDoNothingIfCurrentStateIsNone()
         {
             var log = new Mock<ILogFileManager>(MockBehavior.Strict);
@@ -39,7 +39,7 @@ namespace Lifti.Tests.Persistence.TransactionLogRollbackTests
         /// <summary>
         /// If the current transaction log state is Committed, then rolling back should do nothing.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldDoNothingIfCurrentStateIsCommitted()
         {
             var log = new Mock<ILogFileManager>(MockBehavior.Strict);
@@ -58,7 +58,7 @@ namespace Lifti.Tests.Persistence.TransactionLogRollbackTests
         /// <summary>
         /// Only the extent of the data file should be rolled back if transaction not fully written.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldOnlyRollbackExtentIfTransactionNotFullyWritten()
         {
             var log = new Mock<ILogFileManager>(MockBehavior.Strict);
@@ -81,7 +81,7 @@ namespace Lifti.Tests.Persistence.TransactionLogRollbackTests
         /// <summary>
         /// If the extent of the data file isn't changed its extent shouldn't be affected.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldNotRollbackExtentIfLengthUnchanged()
         {
             var log = new Mock<ILogFileManager>(MockBehavior.Strict);
@@ -103,7 +103,7 @@ namespace Lifti.Tests.Persistence.TransactionLogRollbackTests
         /// <summary>
         /// If the transaction is logged but not fully committed, it should be fully rolled back.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRollbackDataAndShrinkExtentIfLoggedAndTransactionFullyWritten()
         {
             var log = new Mock<ILogFileManager>(MockBehavior.Strict);

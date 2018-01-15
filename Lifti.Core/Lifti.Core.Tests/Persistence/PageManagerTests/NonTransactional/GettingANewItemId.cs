@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
     using Lifti.Persistence;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for getting new item ids from the page manager.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class GettingANewItemId : PageManagerTestBase
     {
         /// <summary>
         /// The page manager should return a sequentially increasing number when requested.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnAnIncrementedNumber()
         {
             var settings = new Mock<IPersistenceSettings>(MockBehavior.Strict);
@@ -41,7 +41,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// After obtaining a new number, the backing store should be updated with the next available number.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldPersistTheNextNumberValueToTheBackingStore()
         {
             var settings = new Mock<IPersistenceSettings>(MockBehavior.Strict);

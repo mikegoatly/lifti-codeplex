@@ -4,20 +4,20 @@
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the node invalidation process.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Invalidating : PersistedFullTextIndexTestBase
     {
         /// <summary>
         /// When a node is invalidated, its child information should be re-loaded when required.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void InvalidatingNodeShouldCauseIndexToBeReloaded()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);

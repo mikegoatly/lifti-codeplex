@@ -5,18 +5,18 @@ namespace Lifti.Tests.FullTextIndexTests
 {
     using System.Linq;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the IFullTextIndexExtensions.EnumerateWordsFromNode{TKey} methods.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class EnumerateIndexedWordsTests
     {
         /// <summary>
         /// An empty index should result in no words being enumerated.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnNoWordsForEmptyIndex()
         {
             var index = new FullTextIndex<string>();
@@ -26,7 +26,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// With only one word indexed, one word should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnSingleWordIfOnlyOneWordIndexed()
         {
             var index = new FullTextIndex<string>();
@@ -40,7 +40,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// If multiple items are indexed against one word, that word should still only be returned once.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnOneWordIfMultipleItemsIndexedAgainstSameWord()
         {
             var index = new FullTextIndex<string>();
@@ -55,7 +55,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// If multiple items are indexed against one word, that word should still only be returned once.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnAllIndexedWordsForAllItems()
         {
             var index = new FullTextIndex<string>();
@@ -70,7 +70,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// If an empty prefix is searched for, then all indexed words should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnAllIndexedWordsForAnEmptyPrefixSearch()
         {
             var index = new FullTextIndex<string>();
@@ -85,7 +85,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// If a null prefix is searched for, then all indexed words should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnAllIndexedWordsForANullPrefixSearch()
         {
             var index = new FullTextIndex<string>();
@@ -100,7 +100,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// If a prefix is supplied, then only words starting with it should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldOnlyReturnWordsStartingWithPrefix()
         {
             var index = new FullTextIndex<string>();
@@ -115,7 +115,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// <summary>
         /// If a prefix is supplied, but no indexed words start with it, no words should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnNoWordsIfPrefixNotMatched()
         {
             var index = new FullTextIndex<string>();
@@ -131,7 +131,7 @@ namespace Lifti.Tests.FullTextIndexTests
         /// If a prefix is supplied and it exactly matches a word, that word and any child words
         /// should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldOnlyReturnWordsStartingWithPrefixIncludingExactMatches()
         {
             var index = new FullTextIndex<string>();

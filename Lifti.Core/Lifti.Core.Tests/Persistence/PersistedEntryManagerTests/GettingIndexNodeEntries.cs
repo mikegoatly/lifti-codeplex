@@ -7,20 +7,20 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for getting all item entries from the <see cref="PersistedEntryManager{TKey}"/> class.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class GettingIndexNodeEntries : PersistedEntryManagerTestBase
     {
         /// <summary>
         /// If the index is empty, then no results should be returned for the root node (node 0).
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldYieldNoResultsForNodeZeroInEmptyIndex()
         {
             var pageManager = CreateMockedPageManager();
@@ -41,7 +41,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// If the index contains entries for a node within a single page, all relevant entries should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnEntriesForNodeWhenAllEntriesContainedInSinglePage()
         {
             var pageManager = CreateMockedPageManager();
@@ -71,7 +71,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// If the index contains entries for a node within multiple pages, all relevant entries should be returned.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnEntriesForNodeWhenAllEntriesContainedOverMultiplePages()
         {
             var pageManager = this.SetupMultipageNodeCollectionPageManager();

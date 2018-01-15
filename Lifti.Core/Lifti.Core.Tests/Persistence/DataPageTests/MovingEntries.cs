@@ -8,18 +8,18 @@ namespace Lifti.Tests.Persistence.DataPageTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for moving entries between pages.
     /// </summary>
-    [TestClass]
-    public class MovingEntries : UnitTestBase
+    [TestFixture]
+    public class MovingEntries
     {
         /// <summary>
         /// When moving entries, any that match the given predicate should be moved to the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldMoveAllEntriesThatMatchPredicate()
         {
             var page = new IndexNodeDataPage(
@@ -51,7 +51,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// If a null predicate is provided, an argument null exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfNullPredicateProvided()
         {
             var page = new IndexNodeDataPage(
@@ -62,33 +62,33 @@ namespace Lifti.Tests.Persistence.DataPageTests
                 new DataPageHeader(DataPageType.IndexNode, 1, 0, null, 0, 0, 0, Data.PageHeaderSize),
                 new IndexNodeEntryBase[0]);
 
-            AssertRaisesArgumentNullException(() => newPage.MoveEntriesFrom(page, null), "predicate");
+            this.AssertRaisesArgumentNullException(() => newPage.MoveEntriesFrom(page, null), "predicate");
         }
 
         /// <summary>
         /// If a null page is provided, an argument null exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfNullFromPageProvided()
         {
             var page = new IndexNodeDataPage(
                 new DataPageHeader(DataPageType.IndexNode, 0, null, null, 1, 2, 2, Data.PageHeaderSize + 10),
                 new IndexNodeEntryBase[] { new NodeReferenceIndexNodeEntry(2, 5, 'a') });
 
-            AssertRaisesArgumentNullException(() => page.MoveEntriesFrom(null, e => e.Id == 1), "from");
+            this.AssertRaisesArgumentNullException(() => page.MoveEntriesFrom(null, e => e.Id == 1), "from");
         }
 
         /// <summary>
         /// If an attempt to move entries to the same page, an argument exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfPagesAreSame()
         {
             var page = new IndexNodeDataPage(
                 new DataPageHeader(DataPageType.IndexNode, 0, null, null, 1, 2, 2, Data.PageHeaderSize + 10),
                 new IndexNodeEntryBase[] { new NodeReferenceIndexNodeEntry(2, 5, 'a') });
 
-            AssertRaisesException<ArgumentException>(() => page.MoveEntriesFrom(page, e => e.Id == 1), "The page being copied from must be different to the current page\r\nParameter name: from");
+            Assert.Throws<ArgumentException>(() => page.MoveEntriesFrom(page, e => e.Id == 1), "The page being copied from must be different to the current page\r\nParameter name: from");
         }
     }
 }

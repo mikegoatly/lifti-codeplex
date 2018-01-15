@@ -3,13 +3,13 @@
 
 namespace Lifti.Tests.FullTextIndexTests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the FullTextIndexer class.
     /// </summary>
-    [TestClass]
-    public abstract class FullTextIndexTestBase : UnitTestBase
+    [TestFixture]
+    public abstract class FullTextIndexTestBase
     {
         /// <summary>
         /// Creates the full text indexer for the Customer class.

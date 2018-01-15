@@ -10,20 +10,20 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
     using Lifti.Persistence;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the page creation process of the page manager.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CreatingAPage : PageManagerTestBase
     {
         /// <summary>
         /// When creating a new item data page, a page manager should prefer to use an existing empty page over extending the data.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldAllocateNewItemDataPageFromExistingEmptyPageIfAvailable()
         {
             // Setup
@@ -42,7 +42,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
             var newPage = pageManager.CreatePage(page);
 
             // Verify
-            Assert.IsInstanceOfType(newPage, typeof(ItemIndexDataPage<int>));
+            Assert.IsInstanceOf<ItemIndexDataPage<int>>(newPage);
             AssertPageReferences(page, 1, null, 2);
             AssertPageReferences(newPage, 2, 1, null);
 
@@ -67,7 +67,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// When creating a new item data page, a page manager should extend the data if required.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldExtendDataIfNoRoomAvailableWhenCreatingNewItemDataPage()
         {
             // Setup
@@ -95,8 +95,8 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
             var newPage3 = pageManager.CreatePage(newPage1);
 
             // Verify
-            Assert.IsInstanceOfType(newPage1, typeof(ItemIndexDataPage<int>));
-            Assert.IsInstanceOfType(newPage2, typeof(ItemIndexDataPage<int>));
+            Assert.IsInstanceOf<ItemIndexDataPage<int>>(newPage1);
+            Assert.IsInstanceOf<ItemIndexDataPage<int>>(newPage2);
             AssertPageReferences(page, 1, null, 4);
             AssertPageReferences(newPage2, 4, 1, 2);
             AssertPageReferences(newPage1, 2, 4, 5);
@@ -127,7 +127,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// When creating a new node data page, a page manager should prefer to use an existing empty page over extending the data.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldAllocateNewNodeDataPageFromExistingEmptyPageIfAvailable()
         {
             // Setup
@@ -146,7 +146,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
             var newPage = pageManager.CreatePage(page);
 
             // Verify
-            Assert.IsInstanceOfType(newPage, typeof(IndexNodeDataPage));
+            Assert.IsInstanceOf<IndexNodeDataPage>(newPage);
             AssertPageReferences(page, 0, null, 2);
             AssertPageReferences(newPage, 2, 0, null);
 
@@ -170,7 +170,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// Creating a new page should cause the new page to be cached.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldCacheTheNewPage()
         {
             // Setup
@@ -182,7 +182,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
             var cache = new Mock<IPageCache>();
             var headerCache = new Dictionary<int, IDataPageHeader>();
             cache.Setup(c => c.GetCachedPage(It.IsAny<IDataPageHeader>(), It.IsAny<Func<IDataPageHeader, IDataPage>>())).Returns<IDataPageHeader, Func<IDataPageHeader, IDataPage>>((h, l) => l(h));
-            cache.Setup(c => c.GetHeader(It.IsAny<int>(), It.IsAny<Func<int, IDataPageHeader>>())).Returns<int, Func<int, IDataPageHeader>>((i, l) => 
+            cache.Setup(c => c.GetHeader(It.IsAny<int>(), It.IsAny<Func<int, IDataPageHeader>>())).Returns<int, Func<int, IDataPageHeader>>((i, l) =>
                 {
                     if (!headerCache.ContainsKey(i))
                     {

@@ -8,19 +8,19 @@ namespace Lifti.Tests
 
     using Lifti.PorterStemmer;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the <see cref="Stemmer"/> class.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class StemmerTest
     {
         /// <summary>
         /// Tests all the base test cases as specified in the files:
         /// http://snowball.tartarus.org/algorithms/porter/voc.txt and http://snowball.tartarus.org/algorithms/porter/output.txt
         /// </summary>
-        [TestMethod]
+        [Test]
         public void StemWordTest()
         {
             var stemmer = new Stemmer();

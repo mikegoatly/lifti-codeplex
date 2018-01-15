@@ -46,9 +46,9 @@ namespace Lifti.Persistence.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="LogFileManager"/> class.
         /// </summary>
-        /// <param name="logFileName">The log file path.</param>
-        public LogFileManager(string logFileName)
-            : base(logFileName)
+        /// <param name="logFileStream">The stream to the log file.</param>
+        public LogFileManager(Stream logFileStream)
+            : base(logFileStream)
         {
             this.reader = new BinaryReader(this.DataStream);
             this.writer = new BinaryWriter(this.DataStream);

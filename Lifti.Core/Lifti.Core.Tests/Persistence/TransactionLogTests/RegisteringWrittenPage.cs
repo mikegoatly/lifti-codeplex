@@ -8,7 +8,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
@@ -16,14 +16,14 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
     /// Tests for the process of registering that a page (or just its header) has been
     /// affected during a transaction.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RegisteringWrittenPage : TransactionLogTestBase
     {
         /// <summary>
         /// If just the page header is touched, then it should be recorded as such,
         /// and no page bodies should be affected.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRecordAHeaderBeingWritten()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -45,7 +45,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// If the page body is touched, then it should be recorded as such,
         /// and should not be reported as a page header being affected.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRecordABodyBeingWritten()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -67,7 +67,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// If just the page header is touched, then the page body is affected,
         /// the full page and headers being changed should be reported.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PageBodyWriteShouldNotOverwritePageHeaderBeingWritten()
         {
             var dataFileManager = new Mock<IDataFileManager>();
@@ -91,7 +91,7 @@ namespace Lifti.Tests.Persistence.TransactionLogTests
         /// If the page is reported as created, having its header and body
         /// modified should be reported.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PageBodyWriteShouldNotOverwritePageHeaderBeingWrittenOrPageCreation()
         {
             var dataFileManager = new Mock<IDataFileManager>();

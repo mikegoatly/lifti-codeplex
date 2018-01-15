@@ -32,10 +32,7 @@ namespace Lifti.Querying
         /// Gets the matches covered by this query result.
         /// </summary>
         /// <value>The resulting matches.</value>
-        public IEnumerable<ItemWordMatch<TItem>> Matches
-        {
-            get { return this.matches; }
-        }
+        public IEnumerable<ItemWordMatch<TItem>> Matches => this.matches;
 
         /// <summary>
         /// Unions this and the specified instance - this is the equivalent of an OR statement.

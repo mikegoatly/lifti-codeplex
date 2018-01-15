@@ -9,18 +9,18 @@ namespace Lifti.Tests.Persistence
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for using the string persistence class.
     /// </summary>
-    [TestClass]
-    public class StringPersistenceTests : UnitTestBase
+    [TestFixture]
+    public class StringPersistenceTests
     {
         /// <summary>
         /// The class should successfully return a string from the stream.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnString()
         {
             using (var stream = new MemoryStream(Data.Start.Then((short)4).Then(Encoding.UTF8.GetBytes("Test")).ToArray()))
@@ -36,7 +36,7 @@ namespace Lifti.Tests.Persistence
         /// <summary>
         /// The class should write a string to the stream.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldWriteString()
         {
             using (var stream = new MemoryStream())
@@ -54,7 +54,7 @@ namespace Lifti.Tests.Persistence
         /// <summary>
         /// The class should measure a string correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldMeasureString()
         {
             var persistence = new StringPersistence();

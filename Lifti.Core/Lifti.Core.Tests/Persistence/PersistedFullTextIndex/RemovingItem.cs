@@ -5,20 +5,20 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for item removal from the index.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class RemovingItem : PersistedFullTextIndexTestBase
     {
         /// <summary>
         /// The item should be removed from the backing store.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveEntryForItem()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);
@@ -40,7 +40,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <summary>
         /// Nodes should be removed from the backing store when they are no longer used.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveEntryForEachNodeNoLongerUsed()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);
@@ -65,7 +65,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// Tests that removing an item that has not been indexed does not cause any exceptions to
         /// be thrown and leaves the index unchanged.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingUnknownItemShouldNotRaiseException()
         {
             var entryManager = new Mock<IPersistedEntryManager<string>>(MockBehavior.Loose);

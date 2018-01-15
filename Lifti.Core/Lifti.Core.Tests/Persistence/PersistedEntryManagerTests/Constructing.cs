@@ -5,20 +5,20 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the constructing of the persisted entry manager.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Constructing
     {
         /// <summary>
         /// The entry manager should initialize the page manager if it is not already initialized.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInitializePageManagerIfItIsNotAlreadyInitialized()
         {
             var pageManager = new Mock<IPageManager>();
@@ -33,7 +33,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// The entry manager should not initialize the page manager if it is already initialized.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldNotInitializePageManagerIfItIsAlreadyInitialized()
         {
             var pageManager = new Mock<IPageManager>();
@@ -48,7 +48,7 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
         /// <summary>
         /// The entry manager should store the reference to the given page manager.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldStoreReferenceToPageManager()
         {
             var pageManager = new Mock<IPageManager>();

@@ -3,23 +3,23 @@
 
 namespace Lifti.Tests.FullTextIndexTests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests the setting of the LockManager property.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class SettingLockManager : FullTextIndexTestBase
     {
         /// <summary>
         /// Tests that attempting to set the LockManager of a FullTextIndex should raise
         /// an ArgumentNullException.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SettingLockManagerToNullShouldRaiseException()
         {
             var index = new FullTextIndex<Customer>();
-            AssertRaisesArgumentNullException(() => index.LockManager = null, "value");
+            this.AssertRaisesArgumentNullException(() => index.LockManager = null, "value");
         }
     }
 }

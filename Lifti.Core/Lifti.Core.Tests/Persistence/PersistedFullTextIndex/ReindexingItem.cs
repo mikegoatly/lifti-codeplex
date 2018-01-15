@@ -5,20 +5,20 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for item re-indexing in the index.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class ReindexingItem : PersistedFullTextIndexTestBase
     {
         /// <summary>
         /// The item should be removed from and reinserted into the backing store.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveEntryForItem()
         {
             var itemIndexed = false;

@@ -7,20 +7,20 @@ namespace Lifti.Tests.Persistence.PersistedEntryManagerTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for adding item index entries.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class AddingItemIndexEntry : PersistedEntryManagerTestBase
     {
         /// <summary>
         /// When an item entry is inserted and it fits into an existing page, it should be inserted into the correct location.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NodeEntryShouldBeInsertedIntoMidPageWhenItFits()
         {
             var pageManager = CreateMockedPageManager();

@@ -1,7 +1,7 @@
 ﻿// This source is subject to the the MIT License (MIT)
 // All rights reserved.
 
-namespace Lifti.Tests.QueryTokenizerTests
+namespace Lifti.Tests.Querying
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -9,18 +9,18 @@ namespace Lifti.Tests.QueryTokenizerTests
     using Lifti.Querying;
     using Lifti.Querying.Tokenization;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for the QueryTokenizer class.
     /// </summary>
-    [TestClass]
-    public class QueryTokenizerTest : UnitTestBase
+    [TestFixture]
+    public class QueryTokenizerTest
     {
         /// <summary>
         /// Verifies that the tokenizer yields no results when passed an empty string.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void EmptyStringYieldsNoResults()
         {
             var target = new QueryTokenizer();
@@ -30,17 +30,17 @@ namespace Lifti.Tests.QueryTokenizerTests
         /// <summary>
         /// Verifies that the tokenizer throws an argument null exception when given null query text.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NullStringThrowsException()
         {
             var target = new QueryTokenizer();
-            AssertRaisesArgumentNullException(() => target.ParseQueryTokens(null).ToArray(), "queryText");
+            this.AssertRaisesArgumentNullException(() => target.ParseQueryTokens(null).ToArray(), "queryText");
         }
 
         /// <summary>
         /// Verifies that the tokenizer yields one result when passed a string containing a single word with no spaces.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SingleWordYieldsOneResult()
         {
             var target = new QueryTokenizer();
@@ -52,7 +52,7 @@ namespace Lifti.Tests.QueryTokenizerTests
         /// <summary>
         /// Verifies that the tokenizer yields one result when passed a string containing a single word with spaces around it.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void SingleWordWithSpacePaddingYieldsOneResult()
         {
             var target = new QueryTokenizer();
@@ -65,7 +65,7 @@ namespace Lifti.Tests.QueryTokenizerTests
         /// Verifies that the tokenizer yields results for the quotes and each of the contained words when passed a 
         /// string containing a composite string in quotes.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void CompositeStringYieldsOneResult()
         {
             var target = new QueryTokenizer();
@@ -82,7 +82,7 @@ namespace Lifti.Tests.QueryTokenizerTests
         /// Verifies that the tokenizer yields one result when passed a string containing a composite string in quotes
         /// that contains an escaped quote.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void CompositeStringWithEscapedQuoteYieldsThreeResults()
         {
             var target = new QueryTokenizer();
@@ -99,7 +99,7 @@ namespace Lifti.Tests.QueryTokenizerTests
         /// Verifies that the tokenizer yields 6 results when passed a string containing two composite strings in quotes
         /// that contains an escaped quote.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TwoCompositeStringsYieldsSixResults()
         {
             var target = new QueryTokenizer();
@@ -118,7 +118,7 @@ namespace Lifti.Tests.QueryTokenizerTests
         /// <summary>
         /// Verifies that the various operators are parsed correctly from text.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void OperatorTokensAreParsedCorrectly()
         {
             var target = new QueryTokenizer();
@@ -137,11 +137,11 @@ namespace Lifti.Tests.QueryTokenizerTests
         /// <summary>
         /// Verifies that an unknown operator raises an exception.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void UnknownOperatorTokensRaiseExceptions()
         {
             var target = new QueryTokenizer();
-            AssertRaisesException<QueryParserException>(
+            Assert.Throws<QueryParserException>(
                 () => target.ParseQueryTokens(@"test1 >>> test2").ToArray(),
                 "Unknown query operator: >>>");
         }

@@ -11,7 +11,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
     /// <summary>
     /// The base class for persisted full text index tests.
     /// </summary>
-    public class PersistedFullTextIndexTestBase : UnitTestBase
+    public class PersistedFullTextIndexTestBase
     {
         /// <summary>
         /// Creates a new persisted full text index instance.

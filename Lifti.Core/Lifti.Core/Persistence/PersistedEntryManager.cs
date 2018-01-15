@@ -86,13 +86,7 @@ namespace Lifti.Persistence
         /// Gets the number of items stored in the persisted backing store.
         /// </summary>
         /// <value>The number of items stored in the index.</value>
-        public int ItemCount
-        {
-            get
-            {
-                return this.itemLookup.Count;
-            }
-        }
+        public int ItemCount => this.itemLookup.Count;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -153,10 +147,17 @@ namespace Lifti.Persistence
         /// <returns>All the item entries.</returns>
         public IEnumerable<ItemEntry<TKey>> GetAllItemEntries()
         {
-            return (from h in this.PageManager.ItemDataPages
-                    where h.EntryCount > 0
-                    from e in ((ItemIndexDataPage<TKey>)this.PageManager.GetPage(h)).Entries
-                    select e).ToArray();
+            foreach (var pageHeader in this.PageManager.ItemDataPages)
+            {
+                if (pageHeader.EntryCount > 0)
+                {
+                    var page = (ItemIndexDataPage<TKey>)this.PageManager.GetPage(pageHeader);
+                    foreach (var entry in page.Entries)
+                    {
+                        yield return entry;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -169,12 +170,16 @@ namespace Lifti.Persistence
         {
             var nodePages = this.GetIndexNodeDataPages(logicalId);
 
-            // Return a de-normalized list of entries for the node
-            var entries = nodePages
-                .SelectMany(p => p.Entries.Where(e => e.Id == logicalId))
-                .ToArray();
-
-            return entries;
+            foreach (var page in nodePages)
+            {
+                foreach (var entry in page.Entries)
+                {
+                    if (entry.Id == logicalId)
+                    {
+                        yield return entry;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -290,7 +295,7 @@ namespace Lifti.Persistence
         public void Initialize()
         {
             // Load a lookup of all the serialized items from the backing store
-            var itemEntries = this.GetAllItemEntries();
+            var itemEntries = this.GetAllItemEntries().ToList();
 
             // Create a lookup of ids keyed on the items themselves for future reference
             this.itemIdLookup = itemEntries.ToDictionary(e => e.Item, e => e.Id);
@@ -407,12 +412,9 @@ namespace Lifti.Persistence
         private void RemoveItemNodeIndexEntry(int itemId, int nodeId)
         {
             var pages = this.GetItemNodeIndexDataPages(itemId);
-            var removed = false;
             foreach (var page in pages)
             {
                 var removedFromPage = page.RemoveEntry(e => e.Id == itemId && e.ReferencedId == nodeId);
-                removed |= removedFromPage;
-
                 if (removedFromPage)
                 {
                     this.PageManager.SavePage(page);
@@ -437,12 +439,27 @@ namespace Lifti.Persistence
             }
             else
             {
-                var pages = pageHeaders.Select(h => (ItemNodeIndexDataPage)this.PageManager.GetPage(h));
-                if (!pages.SelectMany(p => p.Entries.Where(e => e.Id == reference.Id && e.ReferencedId == reference.ReferencedId)).Any())
+                ItemNodeIndexDataPage smallestPage = null;
+                foreach (var pageHeader in pageHeaders)
                 {
-                    // Until we have a smarter indexing approach for referenced ids, just insert into the smallest page
-                    this.InsertEntry(reference, pages.OrderBy(p => p.Header.CurrentSize).First());
+                    var page = (ItemNodeIndexDataPage)this.PageManager.GetPage(pageHeader);
+                    if (smallestPage == null || pageHeader.CurrentSize < smallestPage.Header.CurrentSize)
+                    {
+                        smallestPage = page;
+                    }
+
+                    foreach (var entry in page.Entries)
+                    {
+                        if (entry.Id == reference.Id && entry.ReferencedId == reference.ReferencedId)
+                        {
+                            // Short-circuit - entry already exists.
+                            return;
+                        }
+                    }
                 }
+
+                // Until we have a smarter indexing approach for referenced ids, just insert into the smallest page
+                this.InsertEntry(reference, smallestPage);
             }
         }
 
@@ -456,8 +473,8 @@ namespace Lifti.Persistence
             foreach (var page in pages)
             {
                 var pageContainsEntries = false;
-                Func<ItemNodeIndexEntry, bool> searchPredicate = e => e.Id == itemId;
-                foreach (var entry in page.Entries.Where(searchPredicate))
+                bool SearchPredicate(ItemNodeIndexEntry e) => e.Id == itemId;
+                foreach (var entry in page.Entries.Where(SearchPredicate))
                 {
                     pageContainsEntries = true;
                     this.RemoveIndexNodeEntry(entry.ReferencedId, entry.Id, IndexNodeEntryType.ItemReference);
@@ -465,7 +482,7 @@ namespace Lifti.Persistence
 
                 if (pageContainsEntries)
                 {
-                    page.RemoveEntry(searchPredicate);
+                    page.RemoveEntry(SearchPredicate);
                     this.PageManager.SavePage(page);
                 }
             }
@@ -498,11 +515,6 @@ namespace Lifti.Persistence
                     }
                 }
             }
-
-            if (!removed)
-            {
-                throw new PersistenceException("Unable to remove entry because it doesn't exist ({0})", entryType);
-            }
         }
 
         /// <summary>
@@ -523,12 +535,12 @@ namespace Lifti.Persistence
         /// </summary>
         /// <param name="logicalId">The logical id of the node.</param>
         /// <returns>The relevant pages.</returns>
-        private IndexNodeDataPage[] GetIndexNodeDataPages(int logicalId)
+        private IEnumerable<IndexNodeDataPage> GetIndexNodeDataPages(int logicalId)
         {
-            return (from h in this.PageManager.IndexNodeDataPages.FindPagesForEntry(logicalId)
-                    select this.PageManager.GetPage(h))
-                .Cast<IndexNodeDataPage>()
-                .ToArray();
+            foreach (var pageHeader in this.PageManager.IndexNodeDataPages.FindPagesForEntry(logicalId))
+            {
+                yield return (IndexNodeDataPage)this.PageManager.GetPage(pageHeader);
+            }
         }
 
         /// <summary>
@@ -536,12 +548,12 @@ namespace Lifti.Persistence
         /// </summary>
         /// <param name="logicalId">The logical id of the item.</param>
         /// <returns>The relevant pages.</returns>
-        private ItemNodeIndexDataPage[] GetItemNodeIndexDataPages(int logicalId)
+        private IEnumerable<ItemNodeIndexDataPage> GetItemNodeIndexDataPages(int logicalId)
         {
-            return (from h in this.PageManager.ItemNodeIndexDataPages.FindPagesForEntry(logicalId)
-                    select this.PageManager.GetPage(h))
-                .Cast<ItemNodeIndexDataPage>()
-                .ToArray();
+            foreach (var pageHeader in this.PageManager.ItemNodeIndexDataPages.FindPagesForEntry(logicalId))
+            {
+                yield return (ItemNodeIndexDataPage)this.PageManager.GetPage(pageHeader);
+            }
         }
     }
 }

@@ -3,138 +3,101 @@
 
 namespace Lifti.Tests.Persistence.LogFileManagerTests
 {
-    using System;
-    using System.IO;
-    using System.Linq;
+    #region Using statements
 
     using Lifti.Persistence;
     using Lifti.Persistence.IO;
-    using Lifti.Tests.Persistence.DataFileManagerTests;
-
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     using Moq;
+
+    using NUnit.Framework;
+
+    using Should;
+
+    #endregion
 
     /// <summary>
     /// Tests the end of transaction process for the <see cref="LogFileManager"/> class.
     /// </summary>
-    [TestClass]
-    public class EndingTransaction : UnitTestBase
+    [TestFixture]
+    public class EndingTransaction : LogFileManagerTest
     {
         /// <summary>
-        /// The path to the test file.
+        /// The state of the log file should be marked as logged (but not committed) after ending logging.
         /// </summary>
-        private string path;
+        [Test]
+        public void ShouldMarkTheStateAsLogged()
+        {
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
+
+            this.Sut.InitializeNewLog(dataFile.Object);
+            this.Sut.EndLog();
+
+            this.Sut.LogState.ShouldEqual(TransactionLogState.TransactionLogged);
+        }
 
         /// <summary>
-        /// Cleans up before and after each test.
+        /// If the log state is Committed then an exception should be thrown if the EndLog method is called.
         /// </summary>
-        [TestCleanup]
-        [TestInitialize]
-        public void TestCleanup()
+        [Test]
+        public void ShouldThrowExceptionIfLogIsCommitted()
         {
-            this.path = $"testindex{Guid.NewGuid()}.dat";
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
 
-            if (File.Exists(this.path))
-            {
-                File.Delete(this.path);
-            }
+            this.Sut.InitializeNewLog(dataFile.Object);
+            this.Sut.LogState = TransactionLogState.TransactionCommitted;
 
-            if (File.Exists(this.path + ".txlog"))
-            {
-                File.Delete(this.path + ".txlog");
-            }
+            Assert.Throws<PersistenceException>(() => this.Sut.EndLog(), "Transaction log in an invalid state to end logging - current state: TransactionCommitted");
+        }
+
+        /// <summary>
+        /// If the log state is Logged then an exception should be thrown if the EndLog method is called.
+        /// </summary>
+        [Test]
+        public void ShouldThrowExceptionIfLogIsLogged()
+        {
+            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
+            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
+
+            this.Sut.InitializeNewLog(dataFile.Object);
+            this.Sut.LogState = TransactionLogState.TransactionLogged;
+
+            Assert.Throws<PersistenceException>(() => this.Sut.EndLog(), "Transaction log in an invalid state to end logging - current state: TransactionLogged");
+        }
+
+        /// <summary>
+        /// If the log state is None then an exception should be thrown if the EndLog method is called.
+        /// </summary>
+        [Test]
+        public void ShouldThrowExceptionIfLogIsNotOpen()
+        {
+            Assert.Throws<PersistenceException>(() => this.Sut.EndLog(), "Transaction log in an invalid state to end logging - current state: None");
         }
 
         /// <summary>
         /// When instructed, the end of log marker should be written out.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldWriteOutEndOfLogMarker()
         {
             var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
             dataFile.SetupGet(d => d.CurrentLength).Returns(233);
             dataFile.Setup(d => d.ReadRaw(10, It.Is<byte[]>(b => b.Length == 2))).Returns((int i, byte[] b) => b);
 
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.InitializeNewLog(dataFile.Object);
-                logFileManager.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2);
-                logFileManager.EndLog();
-            }
+            this.Sut.InitializeNewLog(dataFile.Object);
+            this.Sut.LogDataFrom(LogEntryDataType.PageHeader, dataFile.Object, 10, 2);
+            this.Sut.EndLog();
 
             var expectedData = Data.LogFileHeader(TransactionLogState.TransactionLogged, 233)
                 .Then(Data.LogEntryHeader(LogEntryDataType.PageHeader, 10, 2))
                 .Then(new byte[] { 0, 0 })
                 .Then((byte)LogEntryDataType.EndOfLog);
 
-            var actual = FileHelper.GetFileBytes(this.path);
+            var actual = this.Stream.ToArray();
 
-            Assert.IsTrue(expectedData.SequenceEqual(actual));
-        }
-
-        /// <summary>
-        /// The state of the log file should be marked as logged (but not committed) after ending logging.
-        /// </summary>
-        [TestMethod]
-        public void ShouldMarkTheStateAsLogged()
-        {
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.InitializeNewLog(dataFile.Object);
-                logFileManager.EndLog();
-
-                Assert.AreEqual(TransactionLogState.TransactionLogged, logFileManager.LogState);
-            }            
-        }
-
-        /// <summary>
-        /// If the log state is None then an exception should be thrown if the EndLog method is called.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsNotOpen()
-        {
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                AssertRaisesException<PersistenceException>(() => logFileManager.EndLog(), "Transaction log in an invalid state to end logging - current state: None");
-            }  
-        }
-
-        /// <summary>
-        /// If the log state is Committed then an exception should be thrown if the EndLog method is called.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsCommitted()
-        {
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.InitializeNewLog(dataFile.Object);
-                logFileManager.LogState = TransactionLogState.TransactionCommitted;
-                AssertRaisesException<PersistenceException>(() => logFileManager.EndLog(), "Transaction log in an invalid state to end logging - current state: TransactionCommitted");
-            }
-        }
-
-        /// <summary>
-        /// If the log state is Logged then an exception should be thrown if the EndLog method is called.
-        /// </summary>
-        [TestMethod]
-        public void ShouldThrowExceptionIfLogIsLogged()
-        {
-            var dataFile = new Mock<IDataFileManager>(MockBehavior.Strict);
-            dataFile.SetupGet(d => d.CurrentLength).Returns(233);
-
-            using (var logFileManager = new LogFileManager(this.path))
-            {
-                logFileManager.InitializeNewLog(dataFile.Object);
-                logFileManager.LogState = TransactionLogState.TransactionLogged;
-                AssertRaisesException<PersistenceException>(() => logFileManager.EndLog(), "Transaction log in an invalid state to end logging - current state: TransactionLogged");
-            }
+            actual.ShouldEqual(expectedData);
         }
     }
 }

@@ -7,18 +7,18 @@ namespace Lifti.Tests.Persistence.DataPageTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for removing entries from a data page.
     /// </summary>
-    [TestClass]
-    public class RemovingEntry : UnitTestBase
+    [TestFixture]
+    public class RemovingEntry
     {
         /// <summary>
         /// When requested an entry should be removed from the front of the list.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveEntryFromFrontOfList()
         {
             var page = new IndexNodeDataPage(
@@ -39,7 +39,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// When requested an entry should be removed from the end of the list.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveEntryFromEndOfList()
         {
             var page = new IndexNodeDataPage(
@@ -60,7 +60,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// When requested an entry should be removed from the middle of the list.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveEntryFromMiddleOfList()
         {
             var page = new IndexNodeDataPage(
@@ -81,7 +81,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// If the predicate matches multiple entries, then all of them should be removed.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveMultipleEntriesIfAppropriate()
         {
             var page = new IndexNodeDataPage(
@@ -102,7 +102,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// If no items match the predicate, then the method call should return false.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldReturnFalseIfNoItemsDeleted()
         {
             var page = new IndexNodeDataPage(
@@ -123,7 +123,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// Removing the last entry from the page should mark the first and last entry ids as zero.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RemovingLastEntryFromPageShouldMarkTheFirstAndLastEntryIdsAsZero()
         {
             var page = new IndexNodeDataPage(
@@ -143,14 +143,14 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// If a null predicate is provided, an argument null exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfNullPredicateProvided()
         {
             var page = new IndexNodeDataPage(
                 new DataPageHeader(DataPageType.IndexNode, 0, null, null, 1, 2, 2, Data.PageHeaderSize + 10),
                 new IndexNodeEntryBase[] { new NodeReferenceIndexNodeEntry(2, 5, 'a') });
 
-            AssertRaisesArgumentNullException(() => page.RemoveEntry(null), "predicate");
+            this.AssertRaisesArgumentNullException(() => page.RemoveEntry(null), "predicate");
         }
     }
 }

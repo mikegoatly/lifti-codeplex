@@ -6,20 +6,20 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
     using Lifti.Extensibility;
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the Count method.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Count
     {
         /// <summary>
         /// An index should return a count of 0 if it is empty.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void EmptyIndexShouldReturnZeroCount()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);
@@ -37,7 +37,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <summary>
         /// An index should return the correct count of items it it is populated.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PopulatedIndexShouldReturnCorrectCount()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);

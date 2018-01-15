@@ -5,20 +5,20 @@ namespace Lifti.Tests.Persistence.PageCacheTests
 {
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for purging headers from a <see cref="PageCache"/> instance.
     /// </summary>
-    [TestClass]
-    public class PurgingHeaders : UnitTestBase
+    [TestFixture]
+    public class PurgingHeaders
     {
         /// <summary>
         /// If a request for a single header to be purged is made, it should be honoured.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveSingleHeaderFromCache()
         {
             var header = new Mock<IDataPageHeader>();
@@ -42,7 +42,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If a request for multiple headers to be purged is made, it should be honoured.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRemoveMultipleHeadersFromCache()
         {
             var header = new Mock<IDataPageHeader>();
@@ -66,7 +66,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If a request to purge a header that isn't currently cached, it should have no effect.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldHaveNoEffectIfPurgedHeadersNotInCache()
         {
             var header = new Mock<IDataPageHeader>();
@@ -95,7 +95,7 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// When purging headers, associated pages should not be purged.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldOnlyPurgeHeadersNotAssociatedPages()
         {
             var page = new Mock<IDataPage>();
@@ -119,11 +119,11 @@ namespace Lifti.Tests.Persistence.PageCacheTests
         /// <summary>
         /// If the provided list of headers to purge is null, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionIfListOfHeadersIsNull()
         {
             var cache = new PageCache();
-            AssertRaisesArgumentNullException(() => cache.PurgeHeaders(null), "headers");
+            this.AssertRaisesArgumentNullException(() => cache.PurgeHeaders(null), "headers");
         }
     }
 }

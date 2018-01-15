@@ -9,20 +9,20 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
     using Lifti.Persistence;
     using Lifti.Querying;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for searching a persisted full text index.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Searching
     {
         /// <summary>
         /// An index should return no results if it is empty.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void EmptyIndexShouldReturnNoResults()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);
@@ -40,7 +40,7 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
         /// <summary>
         /// When nodes are accessed during a query execution, nodes should be lazy loaded from the persistence store.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldLazyLoadNodesOnDemand()
         {
             var entryManager = new Mock<IPersistedEntryManager<int>>(MockBehavior.Strict);

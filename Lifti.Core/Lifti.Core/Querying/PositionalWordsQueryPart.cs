@@ -29,10 +29,7 @@ namespace Lifti.Querying
         /// Gets the precedence of this operator. This value dictates how binary operators will be combined.
         /// </summary>
         /// <value>The operator precedence.</value>
-        public override OperatorPrecedence Precedence
-        {
-            get { return OperatorPrecedence.Locational; }
-        }
+        public override OperatorPrecedence Precedence => OperatorPrecedence.Locational;
 
         /// <summary>
         /// Gets or sets the left tolerance.

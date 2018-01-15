@@ -7,25 +7,25 @@ namespace Lifti.Tests.Persistence.DataPageTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     /// <summary>
     /// Tests for adding entries to data pages.
     /// </summary>
-    [TestClass]
-    public class AddingEntry : UnitTestBase
+    [TestFixture]
+    public class AddingEntry
     {
         /// <summary>
         /// A persistence exception should be thrown if the added item cannot be fitted onto a page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfAddedItemCannotFitOntoPage()
         {
             var page = new IndexNodeDataPage(
                 new DataPageHeader(DataPageType.IndexNode, 0, null, null, 2, 2, 4, Data.PageSize - 12),
                 new IndexNodeEntryBase[] { new NodeReferenceIndexNodeEntry(2, 5, 'a'), new ItemReferenceIndexNodeEntry(4, 2, 9) });
 
-            AssertRaisesException<PersistenceException>(
+            Assert.Throws<PersistenceException>(
                 () => page.AddEntry(new ItemReferenceIndexNodeEntry(1, 7, 22)),
                 "Added entry will not fit into the page.");
         }
@@ -33,7 +33,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// <summary>
         /// A new item should be inserted if it exactly fits into the remaining space in the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldAddItemIfItMeansThePageWillBeCompletelyFull()
         {
             var page = new IndexNodeDataPage(
@@ -55,7 +55,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// A new item should be inserted as the first entry in a page if its id is less than the id of the first 
         /// entry in the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertEntryAtStartOfPageIfLessThanFirstEntry()
         {
             var page = new IndexNodeDataPage(
@@ -77,7 +77,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// A new item should be inserted as the first entry in a page if its id is equal to the id of the first 
         /// entry in the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertEntryAtStartOfPageIfEqualToFirstEntry()
         {
             var page = new IndexNodeDataPage(
@@ -99,7 +99,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// A new item should be inserted as the last entry in a page if its id is greater than the id of the last 
         /// entry in the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertEntryAtEndOfPageIfGreaterThanLastEntry()
         {
             var page = new IndexNodeDataPage(
@@ -121,7 +121,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// A new item should be inserted as the last entry in a page if its id is equal to the id of the last 
         /// entry in the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertEntryAtEndOfPageIfEqualToLastEntry()
         {
             var page = new IndexNodeDataPage(
@@ -143,7 +143,7 @@ namespace Lifti.Tests.Persistence.DataPageTests
         /// A new item should be inserted at the correct location in the page if its id is between the ids of the 
         /// start and end entries in the page.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInsertEntryAtCorrectLocationIfIdIsBetweenStartAndEndEntries()
         {
             var page = new IndexNodeDataPage(

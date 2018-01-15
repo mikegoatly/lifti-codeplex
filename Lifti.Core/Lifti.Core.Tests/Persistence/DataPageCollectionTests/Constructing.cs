@@ -7,20 +7,20 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
 
     using Lifti.Persistence;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the construction process of the <see cref="DataPageCollection"/> class.
     /// </summary>
-    [TestClass]
-    public class Constructing : UnitTestBase
+    [TestFixture]
+    public class Constructing
     {
         /// <summary>
         /// The default constructor should initialize to empty.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void DefaultConstructorShouldInitializeToEmpty()
         {
             var collection = new DataPageCollection();
@@ -30,7 +30,7 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// The constructor overload should initialize the collection to the given list.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldInitializeToProvidedList()
         {
             var header1 = new Mock<IDataPageHeader>();
@@ -44,10 +44,10 @@ namespace Lifti.Tests.Persistence.DataPageCollectionTests
         /// <summary>
         /// An exception should be thrown if the provided headers are null.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldThrowExceptionIfProvidedHeadersAreNull()
         {
-            AssertRaisesArgumentNullException(() => new DataPageCollection(null), "headers");
+            this.AssertRaisesArgumentNullException(() => new DataPageCollection(null), "headers");
         }
     }
 }

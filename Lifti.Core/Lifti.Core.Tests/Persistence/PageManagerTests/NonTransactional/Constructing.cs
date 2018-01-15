@@ -10,23 +10,23 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
     using Lifti.Persistence.IO;
     using Lifti.Tests.Persistence.PageManagerTests.Setup;
 
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
     using Moq;
 
     /// <summary>
     /// Tests for the construction process of the 
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class Constructing : PageManagerTestBase
     {
         /// <summary>
         /// If a null page cache is provided to the constructor, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionForNullPageCache()
         {
-            AssertRaisesArgumentNullException(
+            this.AssertRaisesArgumentNullException(
                 () => new PageManager<int>(null, new Mock<IPersistenceSettings>().Object, new Mock<IDataFileManager>().Object, new Mock<ITypePersistence<int>>().Object, new Mock<IIndexExtensibilityService<int>>().Object),
                 "pageCache");
         }
@@ -34,10 +34,10 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// If a null persistence settings is provided to the constructor, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionForNullPersistenceSettings()
         {
-            AssertRaisesArgumentNullException(
+            this.AssertRaisesArgumentNullException(
                 () => new PageManager<int>(new Mock<IPageCache>().Object, null, new Mock<IDataFileManager>().Object, new Mock<ITypePersistence<int>>().Object, new Mock<IIndexExtensibilityService<int>>().Object),
                 "settings");
         }
@@ -45,10 +45,10 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// If a null IO manager is provided to the constructor, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionForNullIOManager()
         {
-            AssertRaisesArgumentNullException(
+            this.AssertRaisesArgumentNullException(
                 () => new PageManager<int>(new Mock<IPageCache>().Object, new Mock<IPersistenceSettings>().Object, null, new Mock<ITypePersistence<int>>().Object, new Mock<IIndexExtensibilityService<int>>().Object),
                 "dataFileManager");
         }
@@ -56,10 +56,10 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// If a null type persistence is provided to the constructor, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionForNullTypePersistenceSettings()
         {
-            AssertRaisesArgumentNullException(
+            this.AssertRaisesArgumentNullException(
                 () => new PageManager<int>(new Mock<IPageCache>().Object, new Mock<IPersistenceSettings>().Object, new Mock<IDataFileManager>().Object, null, new Mock<IIndexExtensibilityService<int>>().Object),
                 "typePersistence");
         }
@@ -67,10 +67,10 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// If a null extensibility service is provided to the constructor, an exception should be thrown.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldRaiseExceptionForNullExtensibilityService()
         {
-            AssertRaisesArgumentNullException(
+            this.AssertRaisesArgumentNullException(
                 () => new PageManager<int>(new Mock<IPageCache>().Object, new Mock<IPersistenceSettings>().Object, new Mock<IDataFileManager>().Object, new Mock<ITypePersistence<int>>().Object, null),
                 "extensibilityService");
         }
@@ -78,7 +78,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// A persisted index should initialize the backing store automatically if is loading for the first time.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldAutomaticallyInitializeNewIndexIfLoadingForTheFirstTime()
         {
             // Setup
@@ -117,7 +117,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// A persisted index should construct successfully when a valid index is loaded that has empty pages at the end.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldConstructSuccessfullyWhenIndexWithEmptyPagesIsLoaded()
         {
             // Setup
@@ -153,7 +153,7 @@ namespace Lifti.Tests.Persistence.PageManagerTests.NonTransactional
         /// <summary>
         /// A persisted index should construct successfully when a valid and an index with no empty pages is loaded.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void ShouldConstructSuccessfullyWhenFullyPopulatedIndexIsLoaded()
         {
             // Setup

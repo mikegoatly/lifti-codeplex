@@ -66,10 +66,7 @@ namespace Lifti
         /// Gets the indexed items.
         /// </summary>
         /// <value>The indexed items.</value>
-        internal IEnumerable<TKey> IndexedItems
-        {
-            get { return this.keyNodes.Keys; }
-        }
+        internal IEnumerable<TKey> IndexedItems => this.keyNodes.Keys;
 
         /// <summary>
         /// Removes the specified item key from the index.
