@@ -52,11 +52,10 @@ namespace Lifti.Tests.Persistence.PersistedFullTextIndex
             this.sut.Index("Item 1", "The quick brown fox jumped over the lazy dog");
 
             this.stream.Position = 0L;
-            using (var index = new PersistedFullTextIndex<string>(this.stream))
-            {
-                index.RootNode.Match('T').Match('H').Match('E').GetDirectItems().First().Positions.ShouldEqual(new[] { 0, 6 });
-                index.Search("quick").Single().ShouldEqual("Item 1");
-            }
+
+            var index = new PersistedFullTextIndex<string>(this.stream);
+            index.RootNode.Match('T').Match('H').Match('E').GetDirectItems().First().Positions.ShouldEqual(new[] { 0, 6 });
+            index.Search("quick").Single().ShouldEqual("Item 1");
         }
 
         /// <summary>
