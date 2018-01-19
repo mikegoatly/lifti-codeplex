@@ -3,13 +3,18 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
     <PackageLicenseUrl>Subject to the MIT License - see https://github.com/mikegoatly/lifti for more information</PackageLicenseUrl>
-    <Copyright>Copyright © 2017</Copyright>
+    <Copyright>Copyright © 2018</Copyright>
     <PackageProjectUrl>https://github.com/mikegoatly/lifti</PackageProjectUrl>
     <NeutralLanguage>en</NeutralLanguage>
     <RootNamespace>Lifti</RootNamespace>
     <AssemblyName>Lifti</AssemblyName>
     <Description>Lifti - a lightweight full text index</Description>
-    <Version>2.0.0</Version>
+    <Version>1.0.0</Version>
+    <PackageId>Lifti.Core</PackageId>
+    <Authors>Mike Goatly</Authors>
+    <Company />
+    <RepositoryUrl>https://github.com/mikegoatly/lifti</RepositoryUrl>
+    <PackageReleaseNotes>First core release - based on the original LIFTI package, but netstandard compliant with no support for distributed transactions and minor breaking API changes</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
