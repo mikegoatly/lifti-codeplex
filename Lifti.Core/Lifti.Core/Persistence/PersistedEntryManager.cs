@@ -515,11 +515,6 @@ namespace Lifti.Persistence
                     }
                 }
             }
-
-            if (!removed)
-            {
-                throw new PersistenceException("Unable to remove entry because it doesn't exist ({0})", entryType);
-            }
         }
 
         /// <summary>

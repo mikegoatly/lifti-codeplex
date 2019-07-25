@@ -26,9 +26,8 @@ namespace Lifti
     ///         Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
     ///         Path.Combine("MyApplication", "MyTextIndex.dat");
     /// 
-    ///     // If the file doesn't exist then it will be created, otherwise its
-    ///     // current state will be restored
-    ///     this.index = new PersistedFullTextIndex<string>(indexFilePath)
+    ///     var fileStream = new FileInfo(indexFilePath).Open(FileMode.OpenOrCreate, FileAccess.ReadWrite);
+    ///     this.index = new PersistedFullTextIndex<string>(fileStream)
     ///     {
     ///         WordSplitter = new StemmingWordSplitter(),
     ///         QueryParser = new LiftiQueryParser()
@@ -73,9 +72,7 @@ namespace Lifti
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PersistedFullTextIndex&lt;TKey&gt;"/> class.
-        /// </summary>
+        /// <inheritdoc />
         /// <param name="backingFileStream">The stream for the backing file.</param>
         /// <param name="typePersistence">The type persistence instance capable of reading/writing TKey instances to a binary reader or writer.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "These live for the lifetime of the object and are disposed when this instance is")]
@@ -89,7 +86,7 @@ namespace Lifti
         /// </summary>
         /// <param name="persistedEntryManager">The persisted entry manager for the instance.</param>
         /// <param name="extensibilityService">The extensibility service.</param>
-        public PersistedFullTextIndex(IPersistedEntryManager<TKey> persistedEntryManager, IIndexExtensibilityService<TKey> extensibilityService)
+        internal PersistedFullTextIndex(IPersistedEntryManager<TKey> persistedEntryManager, IIndexExtensibilityService<TKey> extensibilityService)
             : base(extensibilityService)
         {
             this.PersistedEntryManager = persistedEntryManager ?? throw new ArgumentNullException(nameof(persistedEntryManager));
@@ -100,9 +97,7 @@ namespace Lifti
             this.RootNode = new PersistedIndexNode<TKey>(this, '\0', 0);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PersistedFullTextIndex&lt;TKey&gt;"/> class.
-        /// </summary>
+        /// <inheritdoc />
         /// <param name="dataFileManager">The data file manager.</param>
         /// <param name="typePersistence">The type persistence.</param>
         /// <param name="extensibilityService">The extensibility service.</param>
