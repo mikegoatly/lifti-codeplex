@@ -1,3 +1,6 @@
+| For those who may be interested, there is a complete reimagining/rewrite of this project being worked on at https://github.com/mikegoatly/lifti |
+| --- |
+
 # LIFTI
 A Lightweight Full Text Indexer for .NET.
 
